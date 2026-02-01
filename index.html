@@ -126,7 +126,7 @@
     </main>
 
     <script>
-        const WHATSAPP_NUMBER = "919601143501"; 
+        const WHATSAPP_NUMBER = "918619703099"; 
 
         function scrollToSection(id) {
             const container = document.querySelector('.snap-container');
@@ -190,7 +190,7 @@
 
         function orderProduct(name, price, id) {
             const note = document.getElementById(`note-${id}`).value;
-            const message = `Hello! I would like to order from *Crafted with Love*:\n\n✨ *Product:* ${name}\n💰 *Price:* ₹${price}\n💖 *Details:* ${note || 'Standard design'}`;
+            const message = `Hello! I would like to order from *Crafted with Love*:\n\n✨ *Product:* ${name}\n💰 *Price:* ₹${price}\n💖 *Details:* ${note || 'Standard design'}\n\n Please let me know if available! ';
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
