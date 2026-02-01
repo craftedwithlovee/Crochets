@@ -170,7 +170,7 @@
                     <p class="serif-heading text-xl md:text-4xl text-pink-800 leading-tight">
                         Thank you so much for supporting.<br>Every order truly means the world to me! 🧶💞
                     </p>
-                    <p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Handcrafted with Love | Jaipur, Rajasthan</p>
+                    <p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Crafted with Love</p>
                 </div>
             `;
             footerContainer.className = "mt-auto";
@@ -190,7 +190,7 @@
 
         function orderProduct(name, price, id) {
             const note = document.getElementById(`note-${id}`).value;
-            const message = `Hello! I would like to order from *Crafted with Love*:\n\n✨ *Product:* ${name}\n💰 *Price:* ₹${price}\n💖 *Details:* ${note || 'Standard design'}\n\n Please let me know if available! ';
+            const message = `Hello! I would like to order from *Crafted with Love*:\n\n✨ *Product:* ${name}\n💰 *Price:* ₹${price}\n💖 *Details:* ${note || 'Standard design'}`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
