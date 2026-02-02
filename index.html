@@ -17,10 +17,8 @@
             scroll-behavior: smooth;
         }
         .serif-heading { font-family: 'Playfair Display', serif; font-weight: 700; }
-        
         .glass-tile {
             background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url('images/background.jpg.jpeg');
-            background-repeat: repeat;
             background-size: 250px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -29,9 +27,7 @@
             flex-direction: column;
             min-height: 85vh; 
         }
-
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        
         .snap-container {
             display: flex;
             overflow-x: auto;
@@ -66,19 +62,16 @@
         <div class="flex justify-center gap-4 md:gap-12 text-[10px] md:text-sm font-bold text-pink-700 uppercase tracking-widest overflow-x-auto whitespace-nowrap scrollbar-hide px-4">
             <button onclick="scrollToSection('covers')" class="hover:text-pink-500 transition">Phone Cases</button>
             <button onclick="scrollToSection('keychains')" class="hover:text-pink-500 transition">Keychains</button>
-            <button onclick="scrollToSection('flowers')" class="hover:text-pink-500 transition">Flowers</button>
-            <button onclick="scrollToSection('table-decors')" class="hover:text-pink-500 transition">Table Decor</button>
             <button onclick="scrollToSection('hair-accessories')" class="hover:text-pink-500 transition">Hair</button>
             <button onclick="scrollToSection('poshak')" class="hover:text-pink-500 transition">Poshak</button>
         </div>
     </nav>
 
     <main class="snap-container scrollbar-hide">
-        
         <section id="covers" class="snap-section">
             <div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl">
                 <h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Phone Cases</h2>
-                <div id="covers-grid" class="grid grid-cols-3 gap-3 md:gap-8"></div>
+                <div id="covers-grid" class="grid grid-cols-2 gap-4 md:gap-8"></div>
                 <div id="footer-covers"></div>
             </div>
         </section>
@@ -86,31 +79,15 @@
         <section id="keychains" class="snap-section">
             <div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl">
                 <h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Keychains</h2>
-                <div id="keychains-grid" class="grid grid-cols-3 gap-3 md:gap-8"></div>
+                <div id="keychains-grid" class="grid grid-cols-2 gap-4 md:gap-8"></div>
                 <div id="footer-keychains"></div>
-            </div>
-        </section>
-
-        <section id="flowers" class="snap-section">
-            <div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl">
-                <h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Flowers</h2>
-                <div id="flowers-grid" class="grid grid-cols-3 gap-3 md:gap-8"></div>
-                <div id="footer-flowers"></div>
-            </div>
-        </section>
-
-        <section id="table-decors" class="snap-section">
-            <div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl">
-                <h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Table Decor</h2>
-                <div id="table-decors-grid" class="grid grid-cols-3 gap-3 md:gap-8"></div>
-                <div id="footer-table-decors"></div>
             </div>
         </section>
 
         <section id="hair-accessories" class="snap-section">
             <div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl">
                 <h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Hair Accessories</h2>
-                <div id="hair-accessories-grid" class="grid grid-cols-3 gap-3 md:gap-8"></div>
+                <div id="hair-accessories-grid" class="grid grid-cols-2 gap-4 md:gap-8"></div>
                 <div id="footer-hair-accessories"></div>
             </div>
         </section>
@@ -118,49 +95,114 @@
         <section id="poshak" class="snap-section">
             <div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl">
                 <h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Poshak</h2>
-                <div id="poshak-grid" class="grid grid-cols-3 gap-3 md:gap-8"></div>
+                <div id="poshak-grid" class="grid grid-cols-2 gap-4 md:gap-8"></div>
                 <div id="footer-poshak"></div>
             </div>
         </section>
-
     </main>
 
     <script>
-        const WHATSAPP_NUMBER = "918619703099"; 
+        const WHATSAPP_NUMBER = "918613703099";
+
+        // Phone Case Data updated to 35 items
+        const phoneCaseData = [
+            { id: 1, name: "Sweet Strawberry", price: 350 }, { id: 2, name: "Daisy Mist", price: 250 }, { id: 3, name: "Mulberry Mist", price: 250 },
+            { id: 4, name: "Blue Blossom", price: 300 }, { id: 5, name: "Cherry Mist", price: 250 }, { id: 6, name: "Blooming Tulip", price: 300 },
+            { id: 7, name: "Sky Mist", price: 250 }, { id: 8, name: "Classic Bollywood", price: 300 }, { id: 9, name: "Floral Classic #9", price: 300 },
+            { id: 10, name: "Turtle Case", price: 300 }, { id: 11, name: "Handmade Shell #11", price: 300 }, { id: 12, name: "Pinky Bloom", price: 250 },
+            { id: 13, name: "Bow Case", price: 250 }, { id: 14, name: "Bunny Case", price: 300 }, { id: 15, name: "Daisy Garden", price: 250 },
+            { id: 17, name: "Mustard Bow", price: 270 }, { id: 18, name: "Cozy Crochet #18", price: 300 }, { id: 19, name: "Accorn Case", price: 300 },
+            { id: 20, name: "Two Shades", price: 270 }, { id: 21, name: "Bow Case", price: 270 }, { id: 22, name: "Bunny Case 2", price: 300 },
+            { id: 23, name: "Daisy Blossom", price: 250 }, { id: 24, name: "Bow Case 2", price: 250 }, { id: 25, name: "Panda Case", price: 300 },
+            { id: 26, name: "Butterfly Case", price: 300 }, { id: 27, name: "The Red Bunny", price: 300 },
+            { id: 28, name: "Crochet Case #28", price: 300 }, { id: 29, name: "Crochet Case #29", price: 300 }, { id: 30, name: "Crochet Case #30", price: 300 },
+            { id: 31, name: "Crochet Case #31", price: 300 }, { id: 32, name: "Crochet Case #32", price: 300 }, { id: 33, name: "Crochet Case #33", price: 300 },
+            { id: 34, name: "Crochet Case #34", price: 300 }, { id: 35, name: "Crochet Case #35", price: 300 }
+        ];
+
+        const keychainData = [
+            { name: "Sunny Daisy #1", price: 100 }, { name: "Strawberry Heart #2", price: 200 }, { name: "Cotton Candy Cloud #3", price: 200 },
+            { name: "Bumblebee Buddy #4", price: 100 }, { name: "Pink Paw Print #5", price: 100 }, { name: "Minty Jellyfish #6", price: 150 },
+            { name: "Coco Bean Heart #7", price: 150 }, { name: "Midnight Star #8", price: 120 }, { name: "Daisy Doll #9", price: 120 },
+            { name: "Tiny Button nose #10", price: 100 }, { name: "Lavender Sprig #11", price: 200 }, { name: "Citrus Zing #12", price: 100 },
+            { name: "Mochi Octopus #13", price: 120 }, { name: "Forest Froggy #14", price: 150 }, { name: "Red Velvet Rose #15", price: 220 },
+            { name: "Bubblegum Bow #16", price: 150 }, { name: "Matcha Turtle #17", price: 150 }, { name: "Toasted Marshmallow #18", price: 200 },
+            { name: "Shiny Shell #19", price: 220 }, { name: "Prickly Pear Cactus #20", price: 150 }, { name: "Peach Sorbet #21", price: 150 },
+            { name: "Sky Swirl Whale #22", price: 220 }, { name: "Golden Sunflower #23", price: 200 }, { name: "Snowy Spark Bunny #24", price: 150 },
+            { name: "Tulip Pop #25", price: 100 }, { name: "Galaxy Swirl #26", price: 220 }, { name: "Ruby Tulip #27", price: 200 },
+            { name: "Ice Cream Cone #28", price: 100 }, { name: "Purple Dino #29", price: 200 }, { name: "Lilac Butterfly #30", price: 200 }
+        ];
 
         function scrollToSection(id) {
             const container = document.querySelector('.snap-container');
             const target = document.getElementById(id);
-            container.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+            if(target) container.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
         }
 
-        function generateProducts(containerId, count, category, folder, prefix, price, placeholder) {
+        function generateProducts(containerId, count, category, folder, prefix, basePrice, placeholder) {
             const container = document.getElementById(containerId);
             if(!container) return;
-            
-            for (let i = 1; i <= count; i++) {
-                const productId = `${prefix}-${i}`;
-                const imagePath = `images/${folder}/${prefix}${i}.jpg.jpeg`; 
-                
+            let itemsToLoop = count;
+            if (containerId === 'covers-grid') itemsToLoop = phoneCaseData.length;
+
+            for (let i = 0; i < itemsToLoop; i++) {
+                let name, currentPrice, imgIndex;
+                if (containerId === 'covers-grid') {
+                    name = phoneCaseData[i].name;
+                    currentPrice = phoneCaseData[i].price;
+                    imgIndex = phoneCaseData[i].id;
+                } else if (containerId === 'keychains-grid') {
+                    name = keychainData[i].name;
+                    currentPrice = keychainData[i].price;
+                    imgIndex = i + 1;
+                } else {
+                    name = `${category} #${i + 1}`;
+                    currentPrice = basePrice;
+                    imgIndex = i + 1;
+                }
+
+                const productId = `${prefix}-${imgIndex}`;
+                const imagePath = `images/${folder}/${prefix}${imgIndex}.jpg.jpeg`; 
+
+                let priceLogic = "";
+                if (containerId === 'covers-grid') {
+                    priceLogic = `
+                        <div class="mt-2 text-left">
+                            <p class="text-[6px] text-pink-400 font-bold uppercase mb-1">Select Device:</p>
+                            <select id="type-${productId}" onchange="updateCasePrice('${productId}', ${currentPrice})" class="w-full p-1 text-[8px] border border-pink-50 rounded bg-pink-50/50 outline-none">
+                                <option value="standard">Standard Model (₹${currentPrice})</option>
+                                <option value="premium">iPhone / Samsung S (₹${currentPrice + 50})</option>
+                            </select>
+                        </div>
+                    `;
+                }
+
                 const card = document.createElement('div');
-                card.className = "bg-white/80 p-2 rounded-xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group hover:shadow-md transition-all";
+                card.className = "bg-white/80 p-3 rounded-2xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group hover:shadow-md transition-all";
                 card.innerHTML = `
-                    <div class="aspect-square bg-pink-50 rounded-lg mb-2 overflow-hidden cursor-zoom-in relative">
+                    <div class="aspect-square bg-pink-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in relative">
                         <img src="${imagePath}" onclick="openModal('${imagePath}')" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/400?text=${category}'">
                     </div>
                     <div class="flex-grow px-1 text-center">
-                        <h3 class="font-bold text-gray-800 text-[8px] md:text-xs mb-0.5 uppercase tracking-tighter">${category} #${i}</h3>
-                        <p class="text-pink-600 font-extrabold text-[9px] md:text-sm mb-1.5">₹${price}</p>
+                        <h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase tracking-tighter">${name}</h3>
+                        <p id="price-${productId}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${currentPrice}</p>
+                        ${priceLogic}
                         <div class="mt-1 text-left">
-                            <p class="text-[6px] text-pink-400 font-bold italic mb-0.5 uppercase tracking-tighter">Add your customizations:</p>
-                            <textarea id="note-${productId}" placeholder="${placeholder}" class="w-full p-1 text-[8px] border border-pink-50 rounded bg-white/90 focus:bg-white focus:ring-1 focus:ring-pink-100 outline-none resize-none h-8 transition shadow-inner"></textarea>
+                            <p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Add customizations:</p>
+                            <textarea id="note-${productId}" placeholder="${placeholder}" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white/90 focus:bg-white outline-none resize-none h-10 transition shadow-inner"></textarea>
                         </div>
                     </div>
-                    <button onclick="orderProduct('${category} #${i}', ${price}, '${productId}')" class="w-full mt-2 py-1.5 bg-pink-500 hover:bg-pink-600 text-white rounded-xl text-[9px] font-bold uppercase active:scale-95 shadow-md transition-all">ORDER</button>
+                    <button onclick="orderProduct('${name}', ${currentPrice}, '${productId}', '${category}')" class="w-full mt-3 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-xl text-[10px] font-bold uppercase active:scale-95 shadow-md">ORDER</button>
                 `;
                 container.appendChild(card);
             }
             injectFooter(containerId.replace('-grid', ''));
+        }
+
+        function updateCasePrice(productId, base) {
+            const select = document.getElementById(`type-${productId}`);
+            const priceEl = document.getElementById(`price-${productId}`);
+            priceEl.innerText = select.value === 'premium' ? `₹${base + 50}` : `₹${base}`;
         }
 
         function injectFooter(sectionId) {
@@ -168,37 +210,38 @@
             footerContainer.innerHTML = `
                 <div class="mt-auto pt-24 pb-12 text-center px-4">
                     <p class="serif-heading text-xl md:text-4xl text-pink-800 leading-tight">
-                        Thank you for supporting us.<br>💞 Every order truly means the world to me! 🧶
+                        Thank you for supporting us.<br>💞 Every order truly means the world to me 🧶
                     </p>
-                    <p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Handcrafted with Love</p>
+                    <p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Crafted with Love</p>
                 </div>
             `;
             footerContainer.className = "mt-auto";
         }
 
-        function openModal(src) {
-            const modal = document.getElementById('imageModal');
-            document.getElementById('modalImg').src = src;
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+        function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imageModal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function closeModal() { document.getElementById('imageModal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
-        function closeModal() {
-            document.getElementById('imageModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function orderProduct(name, price, id) {
+        function orderProduct(name, price, id, category) {
+            let finalPrice = price;
+            let deviceSuffix = "";
+            if (category === 'Phone Case') {
+                const select = document.getElementById(`type-${id}`);
+                if (select.value === 'premium') {
+                    finalPrice = price + 50;
+                    deviceSuffix = " (Premium Model)";
+                }
+            }
             const note = document.getElementById(`note-${id}`).value;
-            const message = `Hello! I would like to order from *Crafted with Love*:\n\n✨ *Product:* ${name}\n💰 *Price:* ₹${price}\n💖 *Details:* ${note || 'Standard design'}\n\n*Please let me know if this is available.*`;
+            const message = `Hello! I would like to order from *Crafted with Love*:\n\n✨ *Product:* ${name}${deviceSuffix}\n💰 *Price:* ₹${finalPrice}\n💖 *Details:* ${note || 'Standard design'}\n\n*Please let me know if this is available.*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        generateProducts('covers-grid', 25, 'Phone Case', 'covers', 'phonecover', 300, 'eg. model, color, design etc.');
+        generateProducts('covers-grid', null, 'Phone Case', 'covers', 'phonecover', 300, 'eg. model, color, design etc.');
         generateProducts('keychains-grid', 30, 'Keychain', 'keychains', 'keychain', 150, 'eg. color, design etc.');
-        generateProducts('flowers-grid', 10, 'Flower', 'flowers', 'flower', 200, 'eg. color, design etc.');
-        generateProducts('table-decors-grid', 10, 'Table Decor', 'table-decors', 'tabledecor', 400, 'eg. color, design etc.');
-        generateProducts('hair-accessories-grid', 15, 'Hair Accessory', 'hair acessories', 'hairclip', 100, 'eg. color, design etc.');
+        
+        // Hair accessories updated to 32 items
+        generateProducts('hair-accessories-grid', 32, 'Hair Accessory', 'hair acessories', 'hairclip', 100, 'eg. color, design etc.');
+        
         generateProducts('poshak-grid', 20, 'Poshak', 'poshaks', 'poshak', 500, 'eg. color, design etc.');
     </script>
 </body>
