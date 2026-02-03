@@ -17,7 +17,7 @@
         .snap-section { 
             width: 100vw; 
             scroll-snap-align: start; 
-            scroll-snap-stop: always; /* Maintains swipe resistance */
+            scroll-snap-stop: always; /* Enforced single-section swipe */
             flex-shrink: 0; 
             height: 100%; 
             overflow-y: auto; 
@@ -94,16 +94,15 @@
     </header>
 
     <nav class="bg-white/90 backdrop-blur-md shadow-sm py-4 sticky top-0 z-50 px-4 flex items-center justify-between shrink-0">
-        <div class="w-8 md:w-12 invisible"></div> 
-        <div class="flex-1 flex justify-center gap-4 md:gap-12 text-[10px] md:text-sm font-bold text-pink-700 uppercase tracking-widest overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <div class="w-10 md:w-16 invisible"></div> <div class="flex-1 flex justify-start sm:justify-center gap-4 md:gap-12 text-[10px] md:text-sm font-bold text-pink-700 uppercase tracking-widest overflow-x-auto whitespace-nowrap scrollbar-hide px-4">
             <button id="nav-covers" onclick="scrollToSection('covers')" class="nav-btn">Phone Cases</button>
             <button id="nav-keychains" onclick="scrollToSection('keychains')" class="nav-btn">Keychains</button>
             <button id="nav-hair-accessories" onclick="scrollToSection('hair-accessories')" class="nav-btn">Hair Accessories</button>
             <button id="nav-poshak" onclick="scrollToSection('poshak')" class="nav-btn">Poshak</button>
         </div>
-        <button onclick="toggleCart()" class="text-pink-600 hover:scale-110 transition relative w-8 md:w-12 flex justify-end">
+        <button onclick="toggleCart()" class="text-pink-600 hover:scale-110 transition relative w-10 md:w-16 flex justify-end">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-            <span id="cart-count-top" class="absolute -top-2 -right-1 bg-pink-600 text-white text-[8px] font-extrabold h-4 w-4 rounded-full flex items-center justify-center border border-white shadow-sm">0</span>
+            <span id="cart-count-top" class="absolute -top-2 right-0 bg-pink-600 text-white text-[8px] font-extrabold h-4 w-4 rounded-full flex items-center justify-center border border-white shadow-sm">0</span>
         </button>
     </nav>
 
@@ -115,7 +114,6 @@
     </main>
 
     <script>
-        // Site URL for public image links on WhatsApp
         const SITE_URL = "https://craftedwithlovee.github.io/Crochets";
         const WHATSAPP_NUMBER = "918619703099";
         let cart = JSON.parse(localStorage.getItem('crochetCart')) || [];
@@ -139,7 +137,7 @@
                 const sn = i + 1; const pid = `${prefix}-${item.id}`; const ext = (containerId === 'poshak-grid') ? '.jpg.jpg' : '.jpg.jpeg'; const img = `images/${folder}/${prefix}${item.id}${ext}`;
                 let sz = (containerId === 'hair-accessories-grid' && [6, 11, 21, 22, 23, 25, 29, 32].includes(item.id)) ? `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[9px]">Size:</p><select id="size-${pid}" onchange="updateAccessoryPrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Small (₹${item.price})</option><option value="premium">Big (₹${item.price + 20})</option></select></div>` : "";
                 
-                /* Device option updated to Samsung S series */
+                /* Device renamed to Samsung S series */
                 let dv = (containerId === 'covers-grid') ? `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[10px]">Device:</p><select id="type-${pid}" onchange="updateCasePrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Standard (₹${item.price})</option><option value="premium">iPhone / Samsung S series (₹${item.price + 50})</option></select></div>` : "";
                 
                 return `<div class="bg-white/80 p-3 rounded-2xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group">
@@ -204,7 +202,15 @@
 
         function updateCasePrice(id, b) { document.getElementById(`price-${id}`).innerText = `₹${document.getElementById(`type-${id}`).value === 'premium' ? Number(b) + 50 : b}`; }
         function updateAccessoryPrice(id, b) { document.getElementById(`price-${id}`).innerText = `₹${document.getElementById(`size-${id}`).value === 'premium' ? Number(b) + 20 : b}`; }
-        function injectFooter(sid) { document.getElementById('footer-' + sid).innerHTML = `<div class="mt-auto pt-24 pb-12 text-center px-4"><p class="serif-heading text-xl md:text-4xl text-pink-800 leading-tight italic">Thank you for supporting us.<br>💞 Every order truly means the world to me 🧶</p><p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Crafted with Love</p></div>`; }
+        
+        /* Persistent "Thank You" footer as shown in image_d3b380.png */
+        function injectFooter(sid) { 
+            document.getElementById('footer-' + sid).innerHTML = `<div class="mt-auto pt-24 pb-12 text-center px-4">
+                <p class="serif-heading text-xl md:text-4xl text-pink-800 leading-tight italic">Thank you for supporting us.<br>💞 Every order truly means the world to me 🧶</p>
+                <p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Crafted with Love</p>
+            </div>`; 
+        }
+        
         function showToast() { const t = document.getElementById("toast"); t.className = "show"; setTimeout(()=>t.className = "", 3000); }
         const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('nav-' + e.target.id).classList.add('active'); } }); }, { root: document.querySelector('.snap-container'), threshold: 0.6 });
         document.querySelectorAll('.snap-section').forEach(s => obs.observe(s));
