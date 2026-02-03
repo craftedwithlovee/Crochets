@@ -65,14 +65,8 @@
         <div id="cart-items" class="flex-grow overflow-y-auto space-y-4 mb-4 pr-2 scrollbar-hide"></div>
         
         <div class="grid grid-cols-2 gap-3 mb-4">
-            <div>
-                <label class="text-[9px] font-bold text-pink-400 uppercase tracking-widest block mb-1">Delivery Address</label>
-                <textarea id="cart-address" placeholder="Area, City..." class="w-full p-2 text-[10px] border border-pink-100 rounded-xl outline-none h-16 resize-none shadow-inner"></textarea>
-            </div>
-            <div>
-                <label class="text-[9px] font-bold text-pink-400 uppercase tracking-widest block mb-1">Pincode</label>
-                <input type="number" id="cart-pincode" placeholder="6-digit" class="w-full p-2 text-[10px] border border-pink-100 rounded-xl outline-none shadow-inner h-16">
-            </div>
+            <div><label class="text-[9px] font-bold text-pink-400 uppercase tracking-widest block mb-1">Delivery Address</label><textarea id="cart-address" placeholder="Area, City..." class="w-full p-2 text-[10px] border border-pink-100 rounded-xl outline-none h-16 resize-none shadow-inner"></textarea></div>
+            <div><label class="text-[9px] font-bold text-pink-400 uppercase tracking-widest block mb-1">Pincode</label><input type="number" id="cart-pincode" placeholder="6-digit" class="w-full p-2 text-[10px] border border-pink-100 rounded-xl outline-none shadow-inner h-16"></div>
         </div>
 
         <div class="border-t border-pink-100 pt-4">
@@ -112,6 +106,8 @@
     </main>
 
     <script>
+        // Use Public URL for blue clickable WhatsApp links
+        const SITE_URL = "https://craftedwithlovee.github.io/Crochets";
         const WHATSAPP_NUMBER = "918619703099";
         let cart = JSON.parse(localStorage.getItem('crochetCart')) || [];
 
@@ -131,27 +127,24 @@
             const container = document.getElementById(containerId); if(!container) return;
             let items = (containerId === 'covers-grid') ? phoneCaseData : (containerId === 'keychains-grid') ? keychainData.map((it, idx) => ({...it, id: idx+1})) : (containerId === 'hair-accessories-grid') ? hairAccessoryData : poshakData;
             container.innerHTML = items.map((item, i) => {
-                const sn = i + 1; const pid = `${prefix}-${item.id}`;
-                const ext = (containerId === 'poshak-grid') ? '.jpg.jpg' : '.jpg.jpeg';
-                const img = `images/${folder}/${prefix}${item.id}${ext}`;
-                let size = ""; const clu = [6, 11, 21, 22, 23, 25, 29, 32];
-                if (containerId === 'hair-accessories-grid' && clu.includes(item.id)) size = `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[10px]">Size:</p><select id="size-${pid}" onchange="updateAccessoryPrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Small (₹${item.price})</option><option value="premium">Big (₹${item.price + 20})</option></select></div>`;
-                let dev = ""; if (containerId === 'covers-grid') dev = `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[10px]">Device:</p><select id="type-${pid}" onchange="updateCasePrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Standard (₹${item.price})</option><option value="premium">iPhone / Samsung S (₹${item.price + 50})</option></select></div>`;
+                const sn = i + 1; const pid = `${prefix}-${item.id}`; const ext = (containerId === 'poshak-grid') ? '.jpg.jpg' : '.jpg.jpeg'; const img = `images/${folder}/${prefix}${item.id}${ext}`;
+                let sz = (containerId === 'hair-accessories-grid' && [6, 11, 21, 22, 23, 25, 29, 32].includes(item.id)) ? `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[9px]">Size:</p><select id="size-${pid}" onchange="updateAccessoryPrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Small (₹${item.price})</option><option value="premium">Big (₹${item.price + 20})</option></select></div>` : "";
+                let dv = (containerId === 'covers-grid') ? `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[10px]">Device:</p><select id="type-${pid}" onchange="updateCasePrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Standard (₹${item.price})</option><option value="premium">iPhone / Samsung S (₹${item.price + 50})</option></select></div>` : "";
                 return `<div class="bg-white/80 p-3 rounded-2xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group">
                     <div class="aspect-square bg-pink-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in"><img src="${img}" loading="lazy" onclick="openModal('${img}')" class="w-full h-full object-cover transition transform group-hover:scale-105" onerror="this.src='https://placehold.co/400?text=${category}'"></div>
-                    <div class="flex-grow px-1 text-center"><h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase">${sn}. ${item.name}</h3><p id="price-${pid}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${item.price}</p>${dev}${size}<div class="mt-1 text-left"><p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Notes:</p><textarea id="note-${pid}" placeholder="${placeholder}" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white outline-none h-10 shadow-inner resize-none"></textarea></div></div>
-                    <div class="grid grid-cols-2 gap-2 mt-3"><button onclick="addToCart('${item.name}', ${item.price}, '${pid}', '${category}', ${sn})" class="py-2 bg-pink-100 text-pink-600 rounded-xl text-[8px] font-bold uppercase border border-pink-200 active:bg-pink-200">Add to Cart</button><button onclick="orderNow('${item.name}', ${item.price}, '${pid}', '${category}', ${sn})" class="py-2 bg-pink-500 text-white rounded-xl text-[8px] font-bold uppercase active:bg-pink-600 transition">Order Now</button></div></div>`;
+                    <div class="flex-grow px-1 text-center"><h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase tracking-tighter">${sn}. ${item.name}</h3><p id="price-${pid}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${item.price}</p>${dv}${sz}<div class="mt-1 text-left"><p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Notes:</p><textarea id="note-${pid}" placeholder="${placeholder}" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white outline-none h-10 shadow-inner resize-none"></textarea></div></div>
+                    <div class="grid grid-cols-2 gap-2 mt-3"><button onclick="addToCart('${item.name}', ${item.price}, '${pid}', '${category}', ${sn}, '${img}')" class="py-2 bg-pink-100 text-pink-600 rounded-xl text-[8px] font-bold uppercase border border-pink-200 active:bg-pink-200">Add to Cart</button><button onclick="orderNow('${item.name}', ${item.price}, '${pid}', '${category}', ${sn}, '${img}')" class="py-2 bg-pink-500 text-white rounded-xl text-[8px] font-bold uppercase active:bg-pink-600 transition">Order Now</button></div></div>`;
             }).join('');
             injectFooter(containerId.replace('-grid', ''));
         }
 
-        function addToCart(n, p, id, cat, sn) {
+        function addToCart(n, p, id, cat, sn, img) {
             let fp = Number(p); let s = "";
             if (cat === 'Phone Case' && document.getElementById(`type-${id}`)?.value === 'premium') { fp += 50; s = " (Premium)"; }
             if (cat === 'Hair Accessory' && document.getElementById(`size-${id}`)?.value === 'premium') { fp += 20; s = " (Big)"; }
             const note = document.getElementById(`note-${id}`).value || "Standard";
             const full = `${n}${s}`; const ex = cart.find(i => i.name === full && i.note === note && i.category === cat);
-            if (ex) ex.qty += 1; else cart.push({ name: full, price: fp, note: note, category: cat, qty: 1, sn: sn });
+            if (ex) ex.qty += 1; else cart.push({ name: full, price: fp, note: note, category: cat, qty: 1, sn: sn, img: img });
             updateCartUI(); showToast();
         }
 
@@ -160,51 +153,41 @@
 
         function updateCartUI() {
             localStorage.setItem('crochetCart', JSON.stringify(cart));
-            document.getElementById('cart-items').innerHTML = cart.map((it, i) => `<div class="bg-pink-50 p-4 rounded-xl relative border border-pink-100 shadow-sm"><button onclick="removeFromCart(${i})" class="absolute top-2 right-2 text-pink-400 font-bold">&times;</button><h4 class="font-bold text-pink-800 text-[10px] uppercase">${it.sn}. ${it.name}</h4><p class="text-pink-600 font-bold text-xs">₹${it.price * it.qty}</p>
-                <div class="qty-bar">
-                    <button onclick="changeQuantity(${i}, -1)" class="qty-btn"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M20 12H4" /></svg></button>
-                    <span class="qty-val">${it.qty}</span>
-                    <button onclick="changeQuantity(${i}, 1)" class="qty-btn"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg></button>
-                </div>
-                <p class="text-[8px] text-gray-400 font-bold uppercase mt-1 tracking-widest">${it.category}</p><p class="text-[8px] text-gray-500 italic line-clamp-1">Note: ${it.note}</p></div>`).join('');
-            const itemsTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            const shippingFee = (itemsTotal < 500 && itemsTotal > 0) ? 50 : 0;
-            const count = cart.reduce((s, i) => s + i.qty, 0);
-            document.getElementById('items-total').innerText = `₹${itemsTotal}`;
-            document.getElementById('shipping-total').innerText = (shippingFee === 0 && itemsTotal > 0) ? "FREE" : `₹${shippingFee}`;
-            document.getElementById('cart-total').innerText = `₹${itemsTotal + shippingFee}`; 
-            document.getElementById('cart-count').innerText = count;
-            document.getElementById('cart-count-top').innerText = count;
+            document.getElementById('cart-items').innerHTML = cart.map((it, i) => `<div class="bg-pink-50 p-3 rounded-xl relative border border-pink-100 shadow-sm flex gap-3 items-center">
+                <div class="w-12 h-12 bg-white rounded-lg overflow-hidden shrink-0 border border-pink-100 shadow-inner"><img src="${it.img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100?text=${it.category}'"></div>
+                <div class="flex-grow"><button onclick="removeFromCart(${i})" class="absolute top-2 right-2 text-pink-400 font-bold">&times;</button>
+                <h4 class="font-bold text-pink-800 text-[10px] uppercase leading-tight">${it.sn}. ${it.name}</h4><p class="text-pink-600 font-bold text-xs">₹${it.price * it.qty}</p>
+                <div class="qty-bar"><button onclick="changeQuantity(${i}, -1)" class="qty-btn">-</button><span class="qty-val">${it.qty}</span><button onclick="changeQuantity(${i}, 1)" class="qty-btn">+</button></div></div></div>`).join('');
+            
+            const t = cart.reduce((s, i) => s + (i.price * i.qty), 0); const ship = (t < 500 && t > 0) ? 50 : 0; const c = cart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('items-total').innerText = `₹${t}`; document.getElementById('shipping-total').innerText = (ship === 0 && t > 0) ? "FREE" : `₹${ship}`; document.getElementById('cart-total').innerText = `₹${t + ship}`; document.getElementById('cart-count').innerText = c; document.getElementById('cart-count-top').innerText = c;
         }
 
+        // Updated for public blue clickable links
         function checkout() {
             if (cart.length === 0) return alert("Cart is empty!");
-            const addr = document.getElementById('cart-address').value.trim();
-            const pin = document.getElementById('cart-pincode').value.trim();
+            const addr = document.getElementById('cart-address').value.trim(); const pin = document.getElementById('cart-pincode').value.trim();
             if (!addr || !pin) return alert("Please enter both Address and Pincode!");
             const itemsTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
             const shippingFee = (itemsTotal < 500 && itemsTotal > 0) ? 50 : 0;
             let msg = "Hello! Collective order from Crafted with Love:\n\n";
             [...new Set(cart.map(i => i.category))].forEach(cat => { 
                 msg += `--- ${cat.toUpperCase()} ---\n`; 
-                cart.filter(i => i.category === cat).forEach(it => { msg += `${it.sn}. *${it.name}* (x${it.qty})\n   Price: Rs. ${it.price * it.qty}\n   Note: ${it.note}\n\n`; }); 
+                cart.filter(i => i.category === cat).forEach(it => { 
+                    msg += `${it.sn}. *${it.name}* (x${it.qty})\n   Price: Rs. ${it.price * it.qty}\n   Note: ${it.note}\n   Image Link: ${SITE_URL}/${it.img}\n\n`; 
+                }); 
             });
-            msg += `Items Total: Rs. ${itemsTotal}\n`;
-            msg += `Shipping: ${shippingFee === 0 ? "FREE" : "Rs. " + shippingFee}\n`;
-            msg += `*Grand Total: Rs. ${itemsTotal + shippingFee}*\n\n`;
-            msg += `*Delivery Address:* ${addr}\n`; 
-            msg += `*Pincode:* ${pin}\n\n`;
-            msg += `Please let me know if these are available.`;
+            msg += `Items Total: Rs. ${itemsTotal}\nShipping: ${shippingFee === 0 ? "FREE" : "Rs. " + shippingFee}\n*Grand Total: Rs. ${itemsTotal + shippingFee}*\n\n*Delivery Address:* ${addr}\n*Pincode:* ${pin}\n\nPlease let me know if these are available.`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        function orderNow(n, p, id, cat, sn) {
-            let fp = Number(p); let s = "";
-            if (cat === 'Phone Case' && document.getElementById(`type-${id}`)?.value === 'premium') { fp += 50; s = " (Premium)"; }
+        // Updated for public blue clickable link
+        function orderNow(n, p, id, cat, sn, img) {
+            let fp = Number(p); let s = ""; if (cat === 'Phone Case' && document.getElementById(`type-${id}`)?.value === 'premium') { fp += 50; s = " (Premium)"; }
             if (cat === 'Hair Accessory' && document.getElementById(`size-${id}`)?.value === 'premium') { fp += 20; s = " (Big)"; }
             const note = document.getElementById(`note-${id}`).value || "Standard";
             const shipping = fp < 500 ? 50 : 0;
-            const msg = `Hello! Order from Crafted with Love:\n\nProduct: ${sn}. ${n}${s}\nPrice: Rs. ${fp}\nShipping: ${shipping === 0 ? "FREE" : "Rs. " + shipping}\n*Total: Rs. ${fp + shipping}*\nNote: ${note}\n\nPlease let me know if this is available.`;
+            const msg = `Hello! Order from Crafted with Love:\n\nProduct: ${sn}. ${n}${s}\nPrice: Rs. ${fp}\nShipping: ${shipping === 0 ? "FREE" : "Rs. " + shipping}\n*Total: Rs. ${fp + shipping}*\nNote: ${note}\n\nImage Link: ${SITE_URL}/${img}\n\nPlease let me know if this is available.`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
