@@ -19,6 +19,12 @@
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        
+        /* Active Navigation Underline */
+        .nav-btn { position: relative; padding-bottom: 4px; transition: color 0.3s; }
+        .nav-btn.active { color: #db2777; }
+        .nav-btn::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background-color: #db2777; border-radius: 2px; transition: width 0.3s; }
+        .nav-btn.active::after { width: 100%; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -46,12 +52,12 @@
         <p class="text-sm md:text-base tracking-[0.3em] uppercase font-bold text-pink-100 mt-2">The Crochet Studio</p>
     </header>
 
-    <nav class="bg-white/90 backdrop-blur-md shadow-sm py-4 relative z-50">
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm py-4 sticky top-0 z-50">
         <div class="flex justify-center gap-4 md:gap-12 text-[10px] md:text-sm font-bold text-pink-700 uppercase tracking-widest overflow-x-auto whitespace-nowrap scrollbar-hide px-4">
-            <button onclick="scrollToSection('covers')" class="hover:text-pink-500 transition">Phone Cases</button>
-            <button onclick="scrollToSection('keychains')" class="hover:text-pink-500 transition">Keychains</button>
-            <button onclick="scrollToSection('hair-accessories')" class="hover:text-pink-500 transition">Hair Accessories</button>
-            <button onclick="scrollToSection('poshak')" class="hover:text-pink-500 transition">Poshak</button>
+            <button id="nav-covers" onclick="scrollToSection('covers')" class="nav-btn hover:text-pink-500 active transition">Phone Cases</button>
+            <button id="nav-keychains" onclick="scrollToSection('keychains')" class="nav-btn hover:text-pink-500 transition">Keychains</button>
+            <button id="nav-hair-accessories" onclick="scrollToSection('hair-accessories')" class="nav-btn hover:text-pink-500 transition">Hair Accessories</button>
+            <button id="nav-poshak" onclick="scrollToSection('poshak')" class="nav-btn hover:text-pink-500 transition">Poshak</button>
         </div>
     </nav>
 
@@ -66,76 +72,23 @@
         const WHATSAPP_NUMBER = "918619703099";
         let cart = JSON.parse(localStorage.getItem('crochetCart')) || [];
 
-        const phoneCaseData = [
-            { id: 1, name: "Sweet Strawberry", price: 350 }, { id: 2, name: "Daisy Mist", price: 250 }, { id: 3, name: "Mulberry Mist", price: 250 },
-            { id: 4, name: "Blue Blossom", price: 300 }, { id: 5, name: "Cherry Mist", price: 250 }, { id: 6, name: "Blooming Tulip", price: 300 },
-            { id: 7, name: "Sky Mist", price: 250 }, { id: 8, name: "Classic Bollywood", price: 300 }, { id: 9, name: "Floral Classic", price: 300 },
-            { id: 10, name: "Turtle Case", price: 300 }, { id: 11, name: "Handmade Shell", price: 300 }, { id: 12, name: "Pinky Bloom", price: 250 },
-            { id: 13, name: "Bow Case", price: 250 }, { id: 14, name: "Bunny Case", price: 300 }, { id: 15, name: "Daisy Garden", price: 250 },
-            { id: 17, name: "Mustard Bow", price: 270 }, { id: 18, name: "Cozy Crochet", price: 300 }, { id: 19, name: "Accorn Case", price: 300 },
-            { id: 20, name: "Two Shades", price: 270 }, { id: 21, name: "Bow Case", price: 270 }, { id: 22, name: "Bunny Case 2", price: 300 },
-            { id: 23, name: "Daisy Blossom", price: 250 }, { id: 24, name: "Bow Case 2", price: 250 }, { id: 25, name: "Panda Case", price: 300 },
-            { id: 26, name: "Butterfly Case", price: 300 }, { id: 27, name: "The Red Bunny", price: 300 },
-            { id: 28, name: "The Cute Rabbit", price: 350 }, { id: 29, name: "Bunny Case 3", price: 320 }, { id: 30, name: "The Little Butterfly", price: 250 },
-            { id: 31, name: "Standard Case", price: 300 }, { id: 32, name: "Handmade Sheep", price: 270 }, { id: 33, name: "Red Bow", price: 250 },
-            { id: 34, name: "Bright Sunflower", price: 270 }, { id: 35, name: "The Black Beauty", price: 250 }
-        ];
-
-        const keychainData = [
-            { name: "Sunny Daisy", price: 100 }, { name: "Evil eye with name letters", price: 200 }, { name: "Mochi octopus", price: 200 },
-            { name: "bean heart", price: 100 }, { name: "pink paw clouds", price: 100 }, { name: "camera keychain", price: 150 },
-            { name: "yummy cones", price: 150 }, { name: "red velvet bow", price: 120 }, { name: "misty star", price: 120 },
-            { name: "evil eye", price: 100 }, { name: "coco bear", price: 200 }, { name: "Daisy keychain", price: 100 },
-            { name: "misty star 2", price: 120 }, { name: "the balls", price: 150 }, { name: "shiny jelly fish", price: 220 },
-            { name: "bubblegum ghost", price: 150 }, { name: "rainbow", price: 150 }, { name: "purple star", price: 200 },
-            { name: "tulip pop", price: 220 }, { name: "football keychain", price: 150 }, { name: "the cricket key chains", price: 150 },
-            { name: "sky swirl tulip", price: 220 }, { name: "the sun , Earth", price: 200 }, { name: "capachino mug", price: 150 },
-            { name: "Dusty clouds", price: 100 }, { name: "Fancy cherries", price: 220 }, { name: "purple dino star", price: 200 },
-            { name: "the colour palette", price: 100 }, { name: "lilac heart with name initial.", price: 200 }, { name: "purple dino star", price: 200 },
-            { name: "flower keychain", price: 100 }
-        ];
-
-        const hairAccessoryData = [
-            { id: 1, name: "Flower clips (x2)", price: 80 }, { id: 2, name: "Blue parandi", price: 120 }, { id: 3, name: "Cherry", price: 100 },
-            { id: 4, name: "Gajra", price: 250 }, { id: 5, name: "Cute bows", price: 120 }, { id: 6, name: "butterfly Clutcher", price: 120 },
-            { id: 7, name: "White parandi", price: 120 }, { id: 8, name: "Daisy", price: 100 }, { id: 9, name: "Bow", price: 100 },
-            { id: 10, name: "Daisy", price: 80 }, { id: 11, name: "Flower Clutcher", price: 100 }, { id: 12, name: "The Red Bow", price: 150 },
-            { id: 13, name: "Bow 2", price: 100 }, { id: 14, name: "Fancy Bow", price: 200 }, { id: 15, name: "Flower clips (x2)", price: 50 },
-            { id: 16, name: "Flower Rubberband", price: 80 }, { id: 18, name: "Flower Hairpins", price: 100 }, { id: 19, name: "Little Bow", price: 50 },
-            { id: 20, name: "Bow rubberbands(x2)", price: 120 }, { id: 21, name: "Bow Clutchers", price: 80 }, { id: 22, name: "Flower clutcher2", price: 80 },
-            { id: 23, name: "Rose clutcher", price: 150 }, { id: 24, name: "Combo", price: 150 }, { id: 25, name: "Flower Clutcher3", price: 100 },
-            { id: 26, name: "Rose Rubberband", price: 100 }, { id: 27, name: "Sunflower clutcher", price: 80 }, { id: 28, name: "Scrunchie", price: 50 },
-            { id: 29, name: "Tulip Clutcher", price: 150 }, { id: 30, name: "Bow Clutcher", price: 100 }, { id: 31, name: "red flower clutcher", price: 100 },
-            { id: 32, name: "Sunflower clutcher", price: 150 }
-        ];
-
-        // Specific Poshak Data with naming from current prompt
-        const poshakData = [
-            { id: 1, name: "Red&White poshak", price: 500 },
-            { id: 2, name: "FLower poshak", price: 500 }
-        ];
+        const phoneCaseData = [ { id: 1, name: "Sweet Strawberry", price: 350 }, { id: 2, name: "Daisy Mist", price: 250 }, { id: 3, name: "Mulberry Mist", price: 250 }, { id: 4, name: "Blue Blossom", price: 300 }, { id: 5, name: "Cherry Mist", price: 250 }, { id: 6, name: "Blooming Tulip", price: 300 }, { id: 7, name: "Sky Mist", price: 250 }, { id: 8, name: "Classic Bollywood", price: 300 }, { id: 9, name: "Floral Classic", price: 300 }, { id: 10, name: "Turtle Case", price: 300 }, { id: 11, name: "Handmade Shell", price: 300 }, { id: 12, name: "Pinky Bloom", price: 250 }, { id: 13, name: "Bow Case", price: 250 }, { id: 14, name: "Bunny Case", price: 300 }, { id: 15, name: "Daisy Garden", price: 250 }, { id: 17, name: "Mustard Bow", price: 270 }, { id: 18, name: "Cozy Crochet", price: 300 }, { id: 19, name: "Accorn Case", price: 300 }, { id: 20, name: "Two Shades", price: 270 }, { id: 21, name: "Bow Case", price: 270 }, { id: 22, name: "Bunny Case 2", price: 300 }, { id: 23, name: "Daisy Blossom", price: 250 }, { id: 24, name: "Bow Case 2", price: 250 }, { id: 25, name: "Panda Case", price: 300 }, { id: 26, name: "Butterfly Case", price: 300 }, { id: 27, name: "The Red Bunny", price: 300 }, { id: 28, name: "The Cute Rabbit", price: 350 }, { id: 29, name: "Bunny Case 3", price: 320 }, { id: 30, name: "The Little Butterfly", price: 250 }, { id: 31, name: "Standard Case", price: 300 }, { id: 32, name: "Handmade Sheep", price: 270 }, { id: 33, name: "Red Bow", price: 250 }, { id: 34, name: "Bright Sunflower", price: 270 }, { id: 35, name: "The Black Beauty", price: 250 } ];
+        const keychainData = [ { name: "Sunny Daisy", price: 100 }, { name: "Evil eye with name letters", price: 200 }, { name: "Mochi octopus", price: 200 }, { name: "bean heart", price: 100 }, { name: "pink paw clouds", price: 100 }, { name: "camera keychain", price: 150 }, { name: "yummy cones", price: 150 }, { name: "red velvet bow", price: 120 }, { name: "misty star", price: 120 }, { name: "evil eye", price: 100 }, { name: "coco bear", price: 200 }, { name: "Daisy keychain", price: 100 }, { name: "misty star 2", price: 120 }, { name: "the balls", price: 150 }, { name: "shiny jelly fish", price: 220 }, { name: "bubblegum ghost", price: 150 }, { name: "rainbow", price: 150 }, { name: "purple star", price: 200 }, { name: "tulip pop", price: 220 }, { name: "football keychain", price: 150 }, { name: "the cricket key chains", price: 150 }, { name: "sky swirl tulip", price: 220 }, { name: "the sun , Earth", price: 200 }, { name: "capachino mug", price: 150 }, { name: "Dusty clouds", price: 100 }, { name: "Fancy cherries", price: 220 }, { name: "purple dino star", price: 200 }, { name: "the colour palette", price: 100 }, { name: "lilac heart with name initial.", price: 200 }, { name: "purple dino star", price: 200 }, { name: "flower keychain", price: 100 } ];
+        const hairAccessoryData = [ { id: 1, name: "Flower clips (x2)", price: 80 }, { id: 2, name: "Blue parandi", price: 120 }, { id: 3, name: "Cherry", price: 100 }, { id: 4, name: "Gajra", price: 250 }, { id: 5, name: "Cute bows", price: 120 }, { id: 6, name: "butterfly Clutcher", price: 120 }, { id: 7, name: "White parandi", price: 120 }, { id: 8, name: "Daisy", price: 100 }, { id: 9, name: "Bow", price: 100 }, { id: 10, name: "Daisy", price: 80 }, { id: 11, name: "Flower Clutcher", price: 100 }, { id: 12, name: "The Red Bow", price: 150 }, { id: 13, name: "Bow 2", price: 100 }, { id: 14, name: "Fancy Bow", price: 200 }, { id: 15, name: "Flower clips (x2)", price: 50 }, { id: 16, name: "Flower Rubberband", price: 80 }, { id: 18, name: "Flower Hairpins", price: 100 }, { id: 19, name: "Little Bow", price: 50 }, { id: 20, name: "Bow rubberbands(x2)", price: 120 }, { id: 21, name: "Bow Clutchers", price: 80 }, { id: 22, name: "Flower clutcher2", price: 80 }, { id: 23, name: "Rose clutcher", price: 150 }, { id: 24, name: "Combo", price: 150 }, { id: 25, name: "Flower Clutcher3", price: 100 }, { id: 26, name: "Rose Rubberband", price: 100 }, { id: 27, name: "Sunflower clutcher", price: 80 }, { id: 28, name: "Scrunchie", price: 50 }, { id: 29, name: "Tulip Clutcher", price: 150 }, { id: 30, name: "Bow Clutcher", price: 100 }, { id: 31, name: "red flower clutcher", price: 100 }, { id: 32, name: "Sunflower clutcher", price: 150 } ];
+        const poshakData = [ { id: 1, name: "Red&White poshak", price: 500 }, { id: 2, name: "FLower poshak", price: 500 } ];
 
         function scrollToSection(id) { const container = document.querySelector('.snap-container'); const target = document.getElementById(id); if(target) container.scrollTo({ left: target.offsetLeft, behavior: 'smooth' }); }
 
         function generateProducts(containerId, count, category, folder, prefix, basePrice, placeholder) {
             const container = document.getElementById(containerId); if(!container) return;
-            let itemsToLoop = [];
-            if (containerId === 'covers-grid') itemsToLoop = phoneCaseData;
-            else if (containerId === 'keychains-grid') itemsToLoop = keychainData.map((it, idx) => ({...it, id: idx+1}));
-            else if (containerId === 'hair-accessories-grid') itemsToLoop = hairAccessoryData;
-            else if (containerId === 'poshak-grid') itemsToLoop = poshakData;
-
+            let itemsToLoop = (containerId === 'covers-grid') ? phoneCaseData : (containerId === 'keychains-grid') ? keychainData.map((it, idx) => ({...it, id: idx+1})) : (containerId === 'hair-accessories-grid') ? hairAccessoryData : poshakData;
             itemsToLoop.forEach((item, i) => {
-                const sn = i + 1; // Serial Number
-                const productId = `${prefix}-${item.id}`;
-                // Specific fix for poshak naming logic from image_47da6c.png
+                const sn = i + 1; const productId = `${prefix}-${item.id}`;
                 const extension = (containerId === 'poshak-grid') ? '.jpg.jpg' : '.jpg.jpeg';
                 const imagePath = `images/${folder}/${prefix}${item.id}${extension}`;
-                
                 let sizeLogic = ""; const clutcherIds = [6, 11, 21, 22, 23, 25, 29, 32];
                 if (containerId === 'hair-accessories-grid' && clutcherIds.includes(item.id)) { sizeLogic = `<div class="mt-2 text-left"><p class="text-[6px] text-pink-400 font-bold uppercase mb-1">Select Size:</p><select id="size-${productId}" onchange="updateAccessoryPrice('${productId}', ${item.price})" class="w-full p-1 text-[8px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Small (₹${item.price})</option><option value="premium">Big (₹${item.price + 20})</option></select></div>`; }
                 let priceLogic = ""; if (containerId === 'covers-grid') { priceLogic = `<div class="mt-2 text-left"><p class="text-[6px] text-pink-400 font-bold uppercase mb-1">Select Device:</p><select id="type-${productId}" onchange="updateCasePrice('${productId}', ${item.price})" class="w-full p-1 text-[8px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Standard (₹${item.price})</option><option value="premium">iPhone / Samsung S (₹${item.price + 50})</option></select></div>`; }
-                
                 const card = document.createElement('div'); card.className = "bg-white/80 p-3 rounded-2xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group";
                 card.innerHTML = `<div class="aspect-square bg-pink-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in relative"><img src="${imagePath}" onclick="openModal('${imagePath}')" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/400?text=${category}'"></div>
                     <div class="flex-grow px-1 text-center"><h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase tracking-tighter">${sn}. ${item.name}</h3><p id="price-${productId}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${item.price}</p>${priceLogic}${sizeLogic}<div class="mt-1 text-left"><p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Add customizations:</p><textarea id="note-${productId}" placeholder="${placeholder}" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white outline-none h-10 shadow-inner resize-none"></textarea></div></div>
@@ -161,13 +114,8 @@
 
         function updateCartUI() {
             localStorage.setItem('crochetCart', JSON.stringify(cart)); const list = document.getElementById('cart-items');
-            list.innerHTML = cart.map((item, index) => `<div class="bg-pink-50 p-4 rounded-xl relative">
-                <button onclick="removeFromCart(${index})" class="absolute top-2 right-2 text-pink-400 font-bold">&times;</button>
-                <h4 class="font-bold text-pink-800 text-[10px] uppercase">${item.sn}. ${item.name} ${item.qty > 1 ? '(x' + item.qty + ')' : ''}</h4>
-                <p class="text-pink-600 font-bold text-xs">₹${item.price * item.qty}</p>
-                <p class="text-[8px] text-gray-400 font-bold uppercase tracking-widest mt-1">${item.category}</p>
-                <p class="text-[8px] text-gray-500 italic line-clamp-1">Note: ${item.note}</p>
-            </div>`).join('');
+            list.innerHTML = cart.map((item, index) => `<div class="bg-pink-50 p-4 rounded-xl relative"><button onclick="removeFromCart(${index})" class="absolute top-2 right-2 text-pink-400 font-bold">&times;</button>
+                <h4 class="font-bold text-pink-800 text-[10px] uppercase">${item.sn}. ${item.name} ${item.qty > 1 ? '(x' + item.qty + ')' : ''}</h4><p class="text-pink-600 font-bold text-xs">₹${item.price * item.qty}</p><p class="text-[8px] text-gray-400 font-bold uppercase tracking-widest mt-1">${item.category}</p><p class="text-[8px] text-gray-500 italic line-clamp-1">Note: ${item.note}</p></div>`).join('');
             const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             document.getElementById('cart-total').innerText = `₹${total}`; document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
         }
@@ -178,11 +126,7 @@
             if (cart.length === 0) return alert("Cart is empty!");
             const categories = [...new Set(cart.map(item => item.category))];
             let message = "Hello! Collective order from Crafted with Love:\n\n";
-            categories.forEach(cat => {
-                message += `--- ${cat.toUpperCase()} ---\n`;
-                const items = cart.filter(i => i.category === cat);
-                items.forEach((item) => { message += `${item.sn}. *${item.name}* ${item.qty > 1 ? '(x'+item.qty+')' : ''}\n   Price: Rs. ${item.price * item.qty}\n   Note: ${item.note}\n\n`; });
-            });
+            categories.forEach(cat => { message += `--- ${cat.toUpperCase()} ---\n`; const items = cart.filter(i => i.category === cat); items.forEach((item) => { message += `${item.sn}. *${item.name}* ${item.qty > 1 ? '(x'+item.qty+')' : ''}\n   Price: Rs. ${item.price * item.qty}\n   Note: ${item.note}\n\n`; }); });
             const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             message += `Grand Total: Rs. ${total}\n\n*Please let me know if these are available.*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
@@ -203,7 +147,19 @@
         function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imageModal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
         function closeModal() { document.getElementById('imageModal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
-        // Load Products
+        // Section Highlight Logic
+        const observerOptions = { root: document.querySelector('.snap-container'), threshold: 0.6 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                    document.getElementById('nav-' + entry.target.id).classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.snap-section').forEach(section => observer.observe(section));
+
         generateProducts('covers-grid', 35, 'Phone Case', 'covers', 'phonecover', 300, 'eg. model etc.');
         generateProducts('keychains-grid', 31, 'Keychain', 'keychains', 'keychain', 150, 'eg. design etc.');
         generateProducts('hair-accessories-grid', 32, 'Hair Accessory', 'hair acessories', 'hairclip', 100, 'eg. color etc.');
