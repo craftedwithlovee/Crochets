@@ -13,8 +13,20 @@
         .serif-heading { font-family: 'Playfair Display', serif; font-weight: 700; }
         .glass-tile { background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url('images/background.jpg.jpeg'); background-size: 250px; backdrop-filter: blur(12px); border: 2px solid rgba(249, 168, 212, 0.5); display: flex; flex-direction: column; min-height: 100%; contain: layout style; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
+        
+        /* Snap Container with enforced single swipe */
         .snap-container { flex: 1; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
-        .snap-section { width: 100vw; scroll-snap-align: start; flex-shrink: 0; height: 100%; overflow-y: auto; padding: 12px; padding-bottom: 80px; }
+        .snap-section { 
+            width: 100vw; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always; /* Enforces stopping at one section per swipe */
+            flex-shrink: 0; 
+            height: 100%; 
+            overflow-y: auto; 
+            padding: 12px; 
+            padding-bottom: 80px; 
+        }
+        
         #cart-sidebar, #about-overlay { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); will-change: transform; z-index: 1000; position: fixed; top: 0; right: 0; height: 100%; width: 100%; }
         #cart-sidebar.open, #about-overlay.open { transform: translateX(0); }
         .nav-btn { position: relative; padding-bottom: 4px; transition: color 0.3s; }
@@ -106,13 +118,12 @@
     </main>
 
     <script>
-        // Use Public URL for blue clickable WhatsApp links
         const SITE_URL = "https://craftedwithlovee.github.io/Crochets";
         const WHATSAPP_NUMBER = "918619703099";
         let cart = JSON.parse(localStorage.getItem('crochetCart')) || [];
 
         const phoneCaseData = [ { id: 1, name: "Sweet Strawberry", price: 350 }, { id: 2, name: "Daisy Mist", price: 250 }, { id: 3, name: "Mulberry Mist", price: 250 }, { id: 4, name: "Blue Blossom", price: 300 }, { id: 5, name: "Cherry Mist", price: 250 }, { id: 6, name: "Blooming Tulip", price: 300 }, { id: 7, name: "Sky Mist", price: 250 }, { id: 8, name: "Classic Bollywood", price: 300 }, { id: 9, name: "Floral Classic", price: 300 }, { id: 10, name: "Turtle Case", price: 300 }, { id: 11, name: "Handmade Shell", price: 300 }, { id: 12, name: "Pinky Bloom", price: 250 }, { id: 13, name: "Bow Case", price: 250 }, { id: 14, name: "Bunny Case", price: 300 }, { id: 15, name: "Daisy Garden", price: 250 }, { id: 17, name: "Mustard Bow", price: 270 }, { id: 18, name: "Cozy Crochet", price: 300 }, { id: 19, name: "Accorn Case", price: 300 }, { id: 20, name: "Two Shades", price: 270 }, { id: 21, name: "Bow Case", price: 270 }, { id: 22, name: "Bunny Case 2", price: 300 }, { id: 23, name: "Daisy Blossom", price: 250 }, { id: 24, name: "Bow Case 2", price: 250 }, { id: 25, name: "Panda Case", price: 300 }, { id: 26, name: "Butterfly Case", price: 300 }, { id: 27, name: "The Red Bunny", price: 300 }, { id: 28, name: "The Cute Rabbit", price: 350 }, { id: 29, name: "Bunny Case 3", price: 320 }, { id: 30, name: "The Little Butterfly", price: 250 }, { id: 31, name: "Standard Case", price: 300 }, { id: 32, name: "Handmade Sheep", price: 270 }, { id: 33, name: "Red Bow", price: 250 }, { id: 34, name: "Bright Sunflower", price: 270 }, { id: 35, name: "The Black Beauty", price: 250 } ];
-        const keychainData = [ { name: "Sunny Daisy", price: 100 }, { name: "Evil eye with name letters", price: 200 }, { name: "Mochi octopus", price: 200 }, { name: "bean heart", price: 100 }, { name: "pink paw clouds", price: 100 }, { name: "camera keychain", price: 150 }, { name: "yummy cones", price: 150 }, { name: "red velvet bow", price: 120 }, { name: "misty star", price: 120 }, { name: "evil eye", price: 100 }, { name: "coco bear", price: 200 }, { name: "Daisy keychain", price: 100 }, { name: "misty star 2", price: 120 }, { name: "the balls", price: 150 }, { name: "shiny jelly fish", price: 220 }, { name: "bubblegum ghost", price: 150 }, { name: "rainbow", price: 150 }, { name: "purple star", price: 200 }, { name: "tulip pop", price: 220 }, { name: "football keychain", price: 150 }, { name: "the cricket key chains", price: 150 }, { name: "sky swirl tulip", price: 220 }, { name: "the sun , Earth", price: 200 }, { name: "capachino mug", price: 150 }, { name: "Dusty clouds", price: 100 }, { name: "Fancy cherries", price: 220 }, { name: "purple dino star", price: 200 }, { name: "the colour palette", price: 100 }, { name: "lilac heart with name initial.", price: 200 }, { name: "purple dino star", price: 200 }, { name: "flower keychain", price: 100 } ];
+        const keychainData = [ { name: "Sunny Daisy", price: 100 }, { name: "Evil eye with name letters", price: 200 }, { name: "Mochi octopus", price: 200 }, { name: "bean heart", price: 100 }, { name: "pink paw clouds", price: 100 }, { name: "camera keychain", price: 150 }, { name: "yummy cones", price: 150 }, { name: "red velvet bow", price: 120 }, { name: "misty star", price: 120 }, { name: "evil eye", price: 100 }, { name: "coco bear", price: 200 }, { name: "Daisy keychain", price: 100 }, { name: "misty star 2", price: 120 }, { name: "the balls", price: 150 }, { name: "shiny jelly fish", price: 220 }, { name: "bubblegum ghost", price: 150 }, { name: "rainbow", price: 150 }, { name: "purple star", price: 200 }, { name: "tulip pop", price: 220 }, { name: "football keychain", price: 150 }, { name: "the cricket key chains", price: 150 }, { name: "sky swirl tulip", price: 220 }, { name: "the sun , Earth", price: 200 }, { name: "cappuccino mug", price: 150 }, { name: "Dusty clouds", price: 100 }, { name: "Fancy cherries", price: 220 }, { name: "purple dino star", price: 200 }, { name: "the colour palette", price: 100 }, { name: "lilac heart with name initial.", price: 200 }, { name: "purple dino star", price: 200 }, { name: "flower keychain", price: 100 } ];
         const hairAccessoryData = [ { id: 1, name: "Flower clips (x2)", price: 80 }, { id: 2, name: "Blue parandi", price: 120 }, { id: 3, name: "Cherry", price: 100 }, { id: 4, name: "Gajra", price: 250 }, { id: 5, name: "Cute bows", price: 120 }, { id: 6, name: "butterfly Clutcher", price: 120 }, { id: 7, name: "White parandi", price: 120 }, { id: 8, name: "Daisy", price: 100 }, { id: 9, name: "Bow", price: 100 }, { id: 10, name: "Daisy", price: 80 }, { id: 11, name: "Flower Clutcher", price: 100 }, { id: 12, name: "The Red Bow", price: 150 }, { id: 13, name: "Bow 2", price: 100 }, { id: 14, name: "Fancy Bow", price: 200 }, { id: 15, name: "Flower clips (x2)", price: 50 }, { id: 16, name: "Flower Rubberband", price: 80 }, { id: 18, name: "Flower Hairpins", price: 100 }, { id: 19, name: "Little Bow", price: 50 }, { id: 20, name: "Bow rubberbands(x2)", price: 120 }, { id: 21, name: "Bow Clutchers", price: 80 }, { id: 22, name: "Flower clutcher2", price: 80 }, { id: 23, name: "Rose clutcher", price: 150 }, { id: 24, name: "Combo", price: 150 }, { id: 25, name: "Flower Clutcher3", price: 100 }, { id: 26, name: "Rose Rubberband", price: 100 }, { id: 27, name: "Sunflower clutcher", price: 80 }, { id: 28, name: "Scrunchie", price: 50 }, { id: 29, name: "Tulip Clutcher", price: 150 }, { id: 30, name: "Bow Clutcher", price: 100 }, { id: 31, name: "red flower clutcher", price: 100 }, { id: 32, name: "Sunflower clutcher", price: 150 } ];
         const poshakData = [ { id: 1, name: "Red&White poshak", price: 500 }, { id: 2, name: "FLower poshak", price: 500 } ];
 
@@ -130,9 +141,10 @@
                 const sn = i + 1; const pid = `${prefix}-${item.id}`; const ext = (containerId === 'poshak-grid') ? '.jpg.jpg' : '.jpg.jpeg'; const img = `images/${folder}/${prefix}${item.id}${ext}`;
                 let sz = (containerId === 'hair-accessories-grid' && [6, 11, 21, 22, 23, 25, 29, 32].includes(item.id)) ? `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[9px]">Size:</p><select id="size-${pid}" onchange="updateAccessoryPrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Small (₹${item.price})</option><option value="premium">Big (₹${item.price + 20})</option></select></div>` : "";
                 let dv = (containerId === 'covers-grid') ? `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[10px]">Device:</p><select id="type-${pid}" onchange="updateCasePrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Standard (₹${item.price})</option><option value="premium">iPhone / Samsung S (₹${item.price + 50})</option></select></div>` : "";
+                /* Placeholders updated with models, color, design as requested */
                 return `<div class="bg-white/80 p-3 rounded-2xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group">
                     <div class="aspect-square bg-pink-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in"><img src="${img}" loading="lazy" onclick="openModal('${img}')" class="w-full h-full object-cover transition transform group-hover:scale-105" onerror="this.src='https://placehold.co/400?text=${category}'"></div>
-                    <div class="flex-grow px-1 text-center"><h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase tracking-tighter">${sn}. ${item.name}</h3><p id="price-${pid}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${item.price}</p>${dv}${sz}<div class="mt-1 text-left"><p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Notes:</p><textarea id="note-${pid}" placeholder="${placeholder}" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white outline-none h-10 shadow-inner resize-none"></textarea></div></div>
+                    <div class="flex-grow px-1 text-center"><h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase tracking-tighter">${sn}. ${item.name}</h3><p id="price-${pid}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${item.price}</p>${dv}${sz}<div class="mt-1 text-left"><p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Customizations:</p><textarea id="note-${pid}" placeholder="${placeholder}, models, color, design" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white outline-none h-10 shadow-inner resize-none"></textarea></div></div>
                     <div class="grid grid-cols-2 gap-2 mt-3"><button onclick="addToCart('${item.name}', ${item.price}, '${pid}', '${category}', ${sn}, '${img}')" class="py-2 bg-pink-100 text-pink-600 rounded-xl text-[8px] font-bold uppercase border border-pink-200 active:bg-pink-200">Add to Cart</button><button onclick="orderNow('${item.name}', ${item.price}, '${pid}', '${category}', ${sn}, '${img}')" class="py-2 bg-pink-500 text-white rounded-xl text-[8px] font-bold uppercase active:bg-pink-600 transition">Order Now</button></div></div>`;
             }).join('');
             injectFooter(containerId.replace('-grid', ''));
@@ -157,13 +169,13 @@
                 <div class="w-12 h-12 bg-white rounded-lg overflow-hidden shrink-0 border border-pink-100 shadow-inner"><img src="${it.img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100?text=${it.category}'"></div>
                 <div class="flex-grow"><button onclick="removeFromCart(${i})" class="absolute top-2 right-2 text-pink-400 font-bold">&times;</button>
                 <h4 class="font-bold text-pink-800 text-[10px] uppercase leading-tight">${it.sn}. ${it.name}</h4><p class="text-pink-600 font-bold text-xs">₹${it.price * it.qty}</p>
-                <div class="qty-bar"><button onclick="changeQuantity(${i}, -1)" class="qty-btn">-</button><span class="qty-val">${it.qty}</span><button onclick="changeQuantity(${i}, 1)" class="qty-btn">+</button></div></div></div>`).join('');
+                <div class="qty-bar"><button onclick="changeQuantity(${i}, -1)" class="qty-btn">-</button><span class="qty-val">${it.qty}</span><button onclick="changeQuantity(${i}, 1)" class="qty-btn">+</button></div>
+                <p class="text-[8px] text-gray-400 font-bold uppercase mt-1 tracking-widest italic leading-tight">Custom: ${it.note}</p></div></div>`).join('');
             
             const t = cart.reduce((s, i) => s + (i.price * i.qty), 0); const ship = (t < 500 && t > 0) ? 50 : 0; const c = cart.reduce((s, i) => s + i.qty, 0);
             document.getElementById('items-total').innerText = `₹${t}`; document.getElementById('shipping-total').innerText = (ship === 0 && t > 0) ? "FREE" : `₹${ship}`; document.getElementById('cart-total').innerText = `₹${t + ship}`; document.getElementById('cart-count').innerText = c; document.getElementById('cart-count-top').innerText = c;
         }
 
-        // Updated for public blue clickable links
         function checkout() {
             if (cart.length === 0) return alert("Cart is empty!");
             const addr = document.getElementById('cart-address').value.trim(); const pin = document.getElementById('cart-pincode').value.trim();
@@ -174,20 +186,19 @@
             [...new Set(cart.map(i => i.category))].forEach(cat => { 
                 msg += `--- ${cat.toUpperCase()} ---\n`; 
                 cart.filter(i => i.category === cat).forEach(it => { 
-                    msg += `${it.sn}. *${it.name}* (x${it.qty})\n   Price: Rs. ${it.price * it.qty}\n   Note: ${it.note}\n   Image Link: ${SITE_URL}/${it.img}\n\n`; 
+                    msg += `${it.sn}. *${it.name}* (x${it.qty})\n   Price: Rs. ${it.price * it.qty}\n   Customizations: ${it.note}\n   Image: ${SITE_URL}/${it.img}\n\n`; 
                 }); 
             });
             msg += `Items Total: Rs. ${itemsTotal}\nShipping: ${shippingFee === 0 ? "FREE" : "Rs. " + shippingFee}\n*Grand Total: Rs. ${itemsTotal + shippingFee}*\n\n*Delivery Address:* ${addr}\n*Pincode:* ${pin}\n\nPlease let me know if these are available.`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // Updated for public blue clickable link
         function orderNow(n, p, id, cat, sn, img) {
             let fp = Number(p); let s = ""; if (cat === 'Phone Case' && document.getElementById(`type-${id}`)?.value === 'premium') { fp += 50; s = " (Premium)"; }
             if (cat === 'Hair Accessory' && document.getElementById(`size-${id}`)?.value === 'premium') { fp += 20; s = " (Big)"; }
             const note = document.getElementById(`note-${id}`).value || "Standard";
             const shipping = fp < 500 ? 50 : 0;
-            const msg = `Hello! Order from Crafted with Love:\n\nProduct: ${sn}. ${n}${s}\nPrice: Rs. ${fp}\nShipping: ${shipping === 0 ? "FREE" : "Rs. " + shipping}\n*Total: Rs. ${fp + shipping}*\nNote: ${note}\n\nImage Link: ${SITE_URL}/${img}\n\nPlease let me know if this is available.`;
+            const msg = `Hello! Order from Crafted with Love:\n\nProduct: ${sn}. ${n}${s}\nPrice: Rs. ${fp}\nShipping: ${shipping === 0 ? "FREE" : "Rs. " + shipping}\n*Total: Rs. ${fp + shipping}*\nCustomizations: ${note}\n\nImage: ${SITE_URL}/${img}\n\nPlease let me know if this is available.`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -197,10 +208,11 @@
         function showToast() { const t = document.getElementById("toast"); t.className = "show"; setTimeout(()=>t.className = "", 3000); }
         const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('nav-' + e.target.id).classList.add('active'); } }); }, { root: document.querySelector('.snap-container'), threshold: 0.6 });
         document.querySelectorAll('.snap-section').forEach(s => obs.observe(s));
-        generateProducts('covers-grid', 35, 'Phone Case', 'covers', 'phonecover', 'eg. model etc.');
-        generateProducts('keychains-grid', 31, 'Keychain', 'keychains', 'keychain', 'eg. design etc.');
-        generateProducts('hair-accessories-grid', 32, 'Hair Accessory', 'hair acessories', 'hairclip', 'eg. color etc.');
-        generateProducts('poshak-grid', 2, 'Poshak', 'poshaks', 'poshak', 'eg. color etc.');
+        
+        generateProducts('covers-grid', 35, 'Phone Case', 'covers', 'phonecover', 'eg.');
+        generateProducts('keychains-grid', 31, 'Keychain', 'keychains', 'keychain', 'eg.');
+        generateProducts('hair-accessories-grid', 32, 'Hair Accessory', 'hair acessories', 'hairclip', 'eg.');
+        generateProducts('poshak-grid', 2, 'Poshak', 'poshaks', 'poshak', 'eg.');
         updateCartUI();
     </script>
 </body>
