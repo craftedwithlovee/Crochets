@@ -2,70 +2,113 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Crafted with Love | The Crochet Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Quicksand', sans-serif; background-color: #fff0f5; background-image: url('images/background.jpg.jpeg'); background-repeat: repeat; background-size: 250px; overflow: hidden; scroll-behavior: smooth; }
+        :root { --app-height: 100%; }
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; -webkit-tap-highlight-color: transparent; background-color: #fff0f5; }
+        body { font-family: 'Quicksand', sans-serif; background-image: url('images/background.jpg.jpeg'); background-repeat: repeat; background-size: 250px; display: flex; flex-direction: column; height: 100dvh; }
         .serif-heading { font-family: 'Playfair Display', serif; font-weight: 700; }
-        .glass-tile { background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url('images/background.jpg.jpeg'); background-size: 250px; backdrop-filter: blur(12px); border: 2px solid rgba(249, 168, 212, 0.5); display: flex; flex-direction: column; min-height: 85vh; }
+        .glass-tile { background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url('images/background.jpg.jpeg'); background-size: 250px; backdrop-filter: blur(12px); border: 2px solid rgba(249, 168, 212, 0.5); display: flex; flex-direction: column; min-height: 100%; contain: layout style; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .snap-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; height: calc(100vh - 180px); }
-        .snap-section { width: 100vw; scroll-snap-align: start; flex-shrink: 0; height: 100%; overflow-y: auto; padding: 12px; }
-        #cart-sidebar { transition: transform 0.3s ease-in-out; transform: translateX(100%); }
-        #cart-sidebar.open { transform: translateX(0); }
-        #toast { visibility: hidden; min-width: 250px; background-color: #db2777; color: #fff; text-align: center; border-radius: 50px; padding: 12px 24px; position: fixed; z-index: 200; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .snap-container { flex: 1; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        .snap-section { width: 100vw; scroll-snap-align: start; flex-shrink: 0; height: 100%; overflow-y: auto; padding: 12px; padding-bottom: 80px; }
+        #cart-sidebar, #about-overlay { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); will-change: transform; z-index: 1000; position: fixed; top: 0; right: 0; height: 100%; width: 100%; }
+        #cart-sidebar.open, #about-overlay.open { transform: translateX(0); }
+        .nav-btn { position: relative; padding-bottom: 4px; transition: color 0.3s; }
+        .nav-btn.active { color: #db2777; font-weight: 800; }
+        .nav-btn::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background-color: #db2777; border-radius: 2px; transition: width 0.3s; }
+        .nav-btn.active::after { width: 100%; }
+        .qty-bar { display: flex; align-items: center; background: #fff; border: 1px solid #fce7f3; border-radius: 99px; padding: 2px; width: fit-content; margin-top: 8px; }
+        .qty-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #fdf2f8; color: #db2777; border-radius: 50%; cursor: pointer; border: none; transition: 0.2s; }
+        .qty-btn:active { transform: scale(0.9); }
+        .qty-val { padding: 0 10px; font-size: 11px; font-weight: 800; color: #db2777; }
+        #toast { visibility: hidden; min-width: 250px; background-color: #db2777; color: #fff; text-align: center; border-radius: 50px; padding: 12px 24px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-        
-        /* Active Navigation Underline */
-        .nav-btn { position: relative; padding-bottom: 4px; transition: color 0.3s; }
-        .nav-btn.active { color: #db2777; }
-        .nav-btn::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background-color: #db2777; border-radius: 2px; transition: width 0.3s; }
-        .nav-btn.active::after { width: 100%; }
+        .bottom-about-trigger { position: fixed; bottom: 20px; left: 20px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); padding: 8px 20px; border-radius: 50px; font-size: 12px; font-weight: 700; color: #db2777; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 50; border: 1px solid rgba(219, 39, 119, 0.2); }
     </style>
 </head>
 <body class="text-gray-800">
-
     <div id="toast">Item added to cart! 🧶</div>
 
-    <button onclick="toggleCart()" class="fixed bottom-6 right-6 z-[60] bg-pink-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition active:scale-95">
+    <aside id="about-overlay" class="bg-white/95 backdrop-blur-xl shadow-2xl p-8 flex flex-col overflow-y-auto text-center z-[2000]">
+        <div class="flex justify-end items-center mb-4"><button onclick="toggleAbout()" class="text-pink-600 text-5xl leading-none">&times;</button></div>
+        <div class="max-w-3xl mx-auto mt-4">
+            <span class="text-pink-500 font-bold uppercase tracking-[0.4em] text-xs">Est. January 2026</span>
+            <h2 class="serif-heading text-4xl md:text-7xl mb-8 text-pink-800 italic mt-6 leading-tight">Made with Passion,<br>Stitched with Love</h2>
+            <div class="h-1 w-24 bg-pink-300 mx-auto mb-10 rounded-full"></div>
+            <p class="text-lg md:text-2xl text-gray-700 leading-relaxed font-medium mb-16">
+                Welcome to <strong>Crafted with Love</strong>, a 100% homemade brand born from the art of crochet. We believe every accessory should tell a story, which is why we specialize in <strong>fully customized products</strong> designed specifically around your choices.
+            </p>
+            <div class="space-y-12 pb-12">
+                 <div><h4 class="font-extrabold text-pink-700 text-sm uppercase mb-3 tracking-wider">Handmade Quality</h4><p class="text-base text-gray-600 leading-relaxed max-w-xl mx-auto">Every stitch is crafted by hand using premium, skin-friendly yarn for lasting beauty.</p></div>
+                <div><h4 class="font-extrabold text-pink-700 text-sm uppercase mb-3 tracking-wider">Unique To You</h4><p class="text-base text-gray-600 leading-relaxed max-w-xl mx-auto">Share your favorite colors or models, and we’ll bring your vision to life perfectly.</p></div>
+                 <div><h4 class="font-extrabold text-pink-700 text-sm uppercase mb-3 tracking-wider">Eco-Conscious</h4><p class="text-base text-gray-600 leading-relaxed max-w-xl mx-auto">Sustainable, slow-fashion accessories that prioritize the planet and personal style.</p></div>
+            </div>
+        </div>
+    </aside>
+
+    <button onclick="toggleAbout()" class="bottom-about-trigger">About us</button>
+
+    <button onclick="toggleCart()" class="fixed bottom-6 right-6 z-[60] bg-pink-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
         <span id="cart-count" class="absolute -top-1 -right-1 bg-white text-pink-600 text-[10px] font-extrabold h-5 w-5 rounded-full flex items-center justify-center border-2 border-pink-600">0</span>
     </button>
 
-    <aside id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white/95 backdrop-blur-xl z-[100] shadow-2xl p-6 flex flex-col">
-        <div class="flex justify-between items-center mb-8"><h2 class="serif-heading text-3xl text-pink-800">Your Cart</h2><button onclick="toggleCart()" class="text-pink-600 text-4xl">&times;</button></div>
-        <div id="cart-items" class="flex-grow overflow-y-auto space-y-4 mb-6 pr-2 scrollbar-hide"></div>
-        <div class="border-t border-pink-100 pt-6">
-            <div class="flex justify-between text-xl font-bold text-gray-800 mb-6 px-1"><span>Total:</span><span id="cart-total">₹0</span></div>
-            <button onclick="checkout()" class="w-full py-4 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl font-bold uppercase tracking-widest transition shadow-lg active:scale-95">Send Collective Order</button>
+    <aside id="cart-sidebar" class="bg-white/95 backdrop-blur-xl shadow-2xl p-6 flex flex-col md:w-96">
+        <div class="flex justify-between items-center mb-6"><h2 class="serif-heading text-3xl text-pink-800">Your Cart</h2><button onclick="toggleCart()" class="text-pink-600 text-4xl">&times;</button></div>
+        <div class="bg-pink-100 text-pink-700 text-[10px] font-bold p-2 rounded-lg mb-4 text-center">🚚 ₹50 shipping on orders below ₹500. Free shipping above ₹500!</div>
+        <div id="cart-items" class="flex-grow overflow-y-auto space-y-4 mb-4 pr-2 scrollbar-hide"></div>
+        
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div>
+                <label class="text-[9px] font-bold text-pink-400 uppercase tracking-widest block mb-1">Delivery Address</label>
+                <textarea id="cart-address" placeholder="Area, City..." class="w-full p-2 text-[10px] border border-pink-100 rounded-xl outline-none h-16 resize-none shadow-inner"></textarea>
+            </div>
+            <div>
+                <label class="text-[9px] font-bold text-pink-400 uppercase tracking-widest block mb-1">Pincode</label>
+                <input type="number" id="cart-pincode" placeholder="6-digit" class="w-full p-2 text-[10px] border border-pink-100 rounded-xl outline-none shadow-inner h-16">
+            </div>
+        </div>
+
+        <div class="border-t border-pink-100 pt-4">
+            <div class="flex justify-between text-xs font-bold text-gray-500 mb-1 px-1"><span>Items Total:</span><span id="items-total">₹0</span></div>
+            <div class="flex justify-between text-xs font-bold text-gray-500 mb-3 px-1"><span>Shipping:</span><span id="shipping-total">₹0</span></div>
+            <div class="flex justify-between text-xl font-extrabold text-gray-800 mb-6 px-1"><span>Grand Total:</span><span id="cart-total">₹0</span></div>
+            <button onclick="checkout()" class="w-full py-4 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl font-bold uppercase tracking-widest active:scale-95 transition shadow-lg">Send Collective Order</button>
         </div>
     </aside>
 
-    <div id="imageModal" class="fixed inset-0 z-[100] hidden bg-black/95 backdrop-blur-md flex items-center justify-center p-4" onclick="closeModal()"><img id="modalImg" src="" class="max-w-full max-h-[90vh] rounded-2xl"></div>
+    <div id="imageModal" class="fixed inset-0 z-[100] hidden bg-black/95 backdrop-blur-md flex items-center justify-center p-4" onclick="closeModalWithBack()"><img id="modalImg" src="" class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl"></div>
 
-    <header class="py-12 flex flex-col justify-center items-center bg-pink-600 shadow-md relative z-50 text-center">
+    <header class="py-6 md:py-12 flex flex-col justify-center items-center bg-pink-600 relative z-50 text-center shrink-0">
         <h1 class="serif-heading text-4xl md:text-6xl italic text-white tracking-wide">Crafted with Love</h1>
         <p class="text-sm md:text-base tracking-[0.3em] uppercase font-bold text-pink-100 mt-2">The Crochet Studio</p>
     </header>
 
-    <nav class="bg-white/90 backdrop-blur-md shadow-sm py-4 sticky top-0 z-50">
-        <div class="flex justify-center gap-4 md:gap-12 text-[10px] md:text-sm font-bold text-pink-700 uppercase tracking-widest overflow-x-auto whitespace-nowrap scrollbar-hide px-4">
-            <button id="nav-covers" onclick="scrollToSection('covers')" class="nav-btn hover:text-pink-500 active transition">Phone Cases</button>
-            <button id="nav-keychains" onclick="scrollToSection('keychains')" class="nav-btn hover:text-pink-500 transition">Keychains</button>
-            <button id="nav-hair-accessories" onclick="scrollToSection('hair-accessories')" class="nav-btn hover:text-pink-500 transition">Hair Accessories</button>
-            <button id="nav-poshak" onclick="scrollToSection('poshak')" class="nav-btn hover:text-pink-500 transition">Poshak</button>
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm py-4 sticky top-0 z-50 px-4 flex items-center justify-between shrink-0">
+        <div class="w-8 md:w-12 invisible"></div> 
+        <div class="flex-1 flex justify-center gap-4 md:gap-12 text-[10px] md:text-sm font-bold text-pink-700 uppercase tracking-widest overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <button id="nav-covers" onclick="scrollToSection('covers')" class="nav-btn">Phone Cases</button>
+            <button id="nav-keychains" onclick="scrollToSection('keychains')" class="nav-btn">Keychains</button>
+            <button id="nav-hair-accessories" onclick="scrollToSection('hair-accessories')" class="nav-btn">Hair Accessories</button>
+            <button id="nav-poshak" onclick="scrollToSection('poshak')" class="nav-btn">Poshak</button>
         </div>
+        <button onclick="toggleCart()" class="text-pink-600 hover:scale-110 transition relative w-8 md:w-12 flex justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+            <span id="cart-count-top" class="absolute -top-2 -right-1 bg-pink-600 text-white text-[8px] font-extrabold h-4 w-4 rounded-full flex items-center justify-center border border-white shadow-sm">0</span>
+        </button>
     </nav>
 
     <main class="snap-container scrollbar-hide">
-        <section id="covers" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Phone Cases</h2><div id="covers-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-covers"></div></div></section>
-        <section id="keychains" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Keychains</h2><div id="keychains-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-keychains"></div></div></section>
-        <section id="hair-accessories" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Hair Accessories</h2><div id="hair-accessories-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-hair-accessories"></div></div></section>
-        <section id="poshak" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1 tracking-tight">Poshak</h2><div id="poshak-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-poshak"></div></div></section>
+        <section id="covers" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1">Phone Cases</h2><div id="covers-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-covers"></div></div></section>
+        <section id="keychains" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1">Keychains</h2><div id="keychains-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-keychains"></div></div></section>
+        <section id="hair-accessories" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1">Hair Accessories</h2><div id="hair-accessories-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-hair-accessories"></div></div></section>
+        <section id="poshak" class="snap-section"><div class="glass-tile rounded-[2rem] p-4 md:p-10 shadow-xl"><h2 class="serif-heading text-2xl md:text-5xl mb-8 text-pink-800 border-b-2 border-pink-300 inline-block pb-1">Poshak</h2><div id="poshak-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"></div><div id="footer-poshak"></div></div></section>
     </main>
 
     <script>
@@ -77,93 +120,104 @@
         const hairAccessoryData = [ { id: 1, name: "Flower clips (x2)", price: 80 }, { id: 2, name: "Blue parandi", price: 120 }, { id: 3, name: "Cherry", price: 100 }, { id: 4, name: "Gajra", price: 250 }, { id: 5, name: "Cute bows", price: 120 }, { id: 6, name: "butterfly Clutcher", price: 120 }, { id: 7, name: "White parandi", price: 120 }, { id: 8, name: "Daisy", price: 100 }, { id: 9, name: "Bow", price: 100 }, { id: 10, name: "Daisy", price: 80 }, { id: 11, name: "Flower Clutcher", price: 100 }, { id: 12, name: "The Red Bow", price: 150 }, { id: 13, name: "Bow 2", price: 100 }, { id: 14, name: "Fancy Bow", price: 200 }, { id: 15, name: "Flower clips (x2)", price: 50 }, { id: 16, name: "Flower Rubberband", price: 80 }, { id: 18, name: "Flower Hairpins", price: 100 }, { id: 19, name: "Little Bow", price: 50 }, { id: 20, name: "Bow rubberbands(x2)", price: 120 }, { id: 21, name: "Bow Clutchers", price: 80 }, { id: 22, name: "Flower clutcher2", price: 80 }, { id: 23, name: "Rose clutcher", price: 150 }, { id: 24, name: "Combo", price: 150 }, { id: 25, name: "Flower Clutcher3", price: 100 }, { id: 26, name: "Rose Rubberband", price: 100 }, { id: 27, name: "Sunflower clutcher", price: 80 }, { id: 28, name: "Scrunchie", price: 50 }, { id: 29, name: "Tulip Clutcher", price: 150 }, { id: 30, name: "Bow Clutcher", price: 100 }, { id: 31, name: "red flower clutcher", price: 100 }, { id: 32, name: "Sunflower clutcher", price: 150 } ];
         const poshakData = [ { id: 1, name: "Red&White poshak", price: 500 }, { id: 2, name: "FLower poshak", price: 500 } ];
 
-        function scrollToSection(id) { const container = document.querySelector('.snap-container'); const target = document.getElementById(id); if(target) container.scrollTo({ left: target.offsetLeft, behavior: 'smooth' }); }
+        function toggleCart() { const c = document.getElementById('cart-sidebar'); c.classList.toggle('open'); if(c.classList.contains('open')) history.pushState({ modal: 'cart' }, ''); }
+        function toggleAbout() { const a = document.getElementById('about-overlay'); a.classList.toggle('open'); if(a.classList.contains('open')) history.pushState({ modal: 'about' }, ''); }
+        function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imageModal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; history.pushState({ modal: 'image' }, ''); }
+        function closeModalWithBack() { document.getElementById('imageModal').classList.add('hidden'); document.body.style.overflow = 'auto'; if(history.state?.modal === 'image') history.back(); }
+        window.onpopstate = () => { document.getElementById('cart-sidebar').classList.remove('open'); document.getElementById('about-overlay').classList.remove('open'); document.getElementById('imageModal').classList.add('hidden'); document.body.style.overflow = 'auto'; };
+        function scrollToSection(id) { document.querySelector('.snap-container').scrollTo({ left: document.getElementById(id).offsetLeft, behavior: 'smooth' }); }
 
-        function generateProducts(containerId, count, category, folder, prefix, basePrice, placeholder) {
+        function generateProducts(containerId, count, category, folder, prefix, placeholder) {
             const container = document.getElementById(containerId); if(!container) return;
-            let itemsToLoop = (containerId === 'covers-grid') ? phoneCaseData : (containerId === 'keychains-grid') ? keychainData.map((it, idx) => ({...it, id: idx+1})) : (containerId === 'hair-accessories-grid') ? hairAccessoryData : poshakData;
-            itemsToLoop.forEach((item, i) => {
-                const sn = i + 1; const productId = `${prefix}-${item.id}`;
-                const extension = (containerId === 'poshak-grid') ? '.jpg.jpg' : '.jpg.jpeg';
-                const imagePath = `images/${folder}/${prefix}${item.id}${extension}`;
-                let sizeLogic = ""; const clutcherIds = [6, 11, 21, 22, 23, 25, 29, 32];
-                if (containerId === 'hair-accessories-grid' && clutcherIds.includes(item.id)) { sizeLogic = `<div class="mt-2 text-left"><p class="text-[6px] text-pink-400 font-bold uppercase mb-1">Select Size:</p><select id="size-${productId}" onchange="updateAccessoryPrice('${productId}', ${item.price})" class="w-full p-1 text-[8px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Small (₹${item.price})</option><option value="premium">Big (₹${item.price + 20})</option></select></div>`; }
-                let priceLogic = ""; if (containerId === 'covers-grid') { priceLogic = `<div class="mt-2 text-left"><p class="text-[6px] text-pink-400 font-bold uppercase mb-1">Select Device:</p><select id="type-${productId}" onchange="updateCasePrice('${productId}', ${item.price})" class="w-full p-1 text-[8px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Standard (₹${item.price})</option><option value="premium">iPhone / Samsung S (₹${item.price + 50})</option></select></div>`; }
-                const card = document.createElement('div'); card.className = "bg-white/80 p-3 rounded-2xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group";
-                card.innerHTML = `<div class="aspect-square bg-pink-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in relative"><img src="${imagePath}" onclick="openModal('${imagePath}')" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/400?text=${category}'"></div>
-                    <div class="flex-grow px-1 text-center"><h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase tracking-tighter">${sn}. ${item.name}</h3><p id="price-${productId}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${item.price}</p>${priceLogic}${sizeLogic}<div class="mt-1 text-left"><p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Add customizations:</p><textarea id="note-${productId}" placeholder="${placeholder}" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white outline-none h-10 shadow-inner resize-none"></textarea></div></div>
-                    <div class="grid grid-cols-2 gap-2 mt-3"><button onclick="addToCart('${item.name}', ${item.price}, '${productId}', '${category}', ${sn})" class="py-2 bg-pink-100 hover:bg-pink-200 text-pink-600 rounded-xl text-[8px] font-bold uppercase transition border border-pink-200">Add to Cart</button><button onclick="orderNow('${item.name}', ${item.price}, '${productId}', '${category}', ${sn})" class="py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-xl text-[8px] font-bold uppercase transition">Order Now</button></div>`;
-                container.appendChild(card);
-            });
+            let items = (containerId === 'covers-grid') ? phoneCaseData : (containerId === 'keychains-grid') ? keychainData.map((it, idx) => ({...it, id: idx+1})) : (containerId === 'hair-accessories-grid') ? hairAccessoryData : poshakData;
+            container.innerHTML = items.map((item, i) => {
+                const sn = i + 1; const pid = `${prefix}-${item.id}`;
+                const ext = (containerId === 'poshak-grid') ? '.jpg.jpg' : '.jpg.jpeg';
+                const img = `images/${folder}/${prefix}${item.id}${ext}`;
+                let size = ""; const clu = [6, 11, 21, 22, 23, 25, 29, 32];
+                if (containerId === 'hair-accessories-grid' && clu.includes(item.id)) size = `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[10px]">Size:</p><select id="size-${pid}" onchange="updateAccessoryPrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Small (₹${item.price})</option><option value="premium">Big (₹${item.price + 20})</option></select></div>`;
+                let dev = ""; if (containerId === 'covers-grid') dev = `<div class="mt-2 text-left"><p class="text-pink-400 font-bold uppercase mb-1 text-[10px]">Device:</p><select id="type-${pid}" onchange="updateCasePrice('${pid}', ${item.price})" class="w-full p-1 text-[10px] border border-pink-50 rounded bg-pink-50/50 outline-none"><option value="standard">Standard (₹${item.price})</option><option value="premium">iPhone / Samsung S (₹${item.price + 50})</option></select></div>`;
+                return `<div class="bg-white/80 p-3 rounded-2xl shadow-sm flex flex-col h-full border border-pink-100 backdrop-blur-sm group">
+                    <div class="aspect-square bg-pink-50 rounded-xl mb-3 overflow-hidden cursor-zoom-in"><img src="${img}" loading="lazy" onclick="openModal('${img}')" class="w-full h-full object-cover transition transform group-hover:scale-105" onerror="this.src='https://placehold.co/400?text=${category}'"></div>
+                    <div class="flex-grow px-1 text-center"><h3 class="font-bold text-gray-800 text-[10px] md:text-sm mb-1 uppercase">${sn}. ${item.name}</h3><p id="price-${pid}" class="text-pink-600 font-extrabold text-[11px] md:text-lg mb-2">₹${item.price}</p>${dev}${size}<div class="mt-1 text-left"><p class="text-[7px] text-pink-400 font-bold italic mb-1 uppercase tracking-tighter">Notes:</p><textarea id="note-${pid}" placeholder="${placeholder}" class="w-full p-2 text-[9px] border border-pink-50 rounded bg-white outline-none h-10 shadow-inner resize-none"></textarea></div></div>
+                    <div class="grid grid-cols-2 gap-2 mt-3"><button onclick="addToCart('${item.name}', ${item.price}, '${pid}', '${category}', ${sn})" class="py-2 bg-pink-100 text-pink-600 rounded-xl text-[8px] font-bold uppercase border border-pink-200 active:bg-pink-200">Add to Cart</button><button onclick="orderNow('${item.name}', ${item.price}, '${pid}', '${category}', ${sn})" class="py-2 bg-pink-500 text-white rounded-xl text-[8px] font-bold uppercase active:bg-pink-600 transition">Order Now</button></div></div>`;
+            }).join('');
             injectFooter(containerId.replace('-grid', ''));
         }
 
-        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('open'); }
-        function showToast() { const t = document.getElementById("toast"); t.className = "show"; setTimeout(()=>{ t.className = ""; }, 3000); }
-
-        function addToCart(name, price, id, category, sn) {
-            let fp = Number(price); let s = "";
-            if (category === 'Phone Case') { const sel = document.getElementById(`type-${id}`); if (sel?.value === 'premium') { fp += 50; s = " (Premium)"; } }
-            else if (category === 'Hair Accessory') { const sel = document.getElementById(`size-${id}`); if (sel?.value === 'premium') { fp += 20; s = " (Big)"; } }
+        function addToCart(n, p, id, cat, sn) {
+            let fp = Number(p); let s = "";
+            if (cat === 'Phone Case' && document.getElementById(`type-${id}`)?.value === 'premium') { fp += 50; s = " (Premium)"; }
+            if (cat === 'Hair Accessory' && document.getElementById(`size-${id}`)?.value === 'premium') { fp += 20; s = " (Big)"; }
             const note = document.getElementById(`note-${id}`).value || "Standard";
-            const fullName = `${name}${s}`;
-            const existing = cart.find(item => item.name === fullName && item.note === note && item.category === category);
-            if (existing) { existing.qty += 1; } else { cart.push({ name: fullName, price: fp, note: note, category: category, qty: 1, sn: sn }); }
+            const full = `${n}${s}`; const ex = cart.find(i => i.name === full && i.note === note && i.category === cat);
+            if (ex) ex.qty += 1; else cart.push({ name: full, price: fp, note: note, category: cat, qty: 1, sn: sn });
             updateCartUI(); showToast();
         }
 
-        function updateCartUI() {
-            localStorage.setItem('crochetCart', JSON.stringify(cart)); const list = document.getElementById('cart-items');
-            list.innerHTML = cart.map((item, index) => `<div class="bg-pink-50 p-4 rounded-xl relative"><button onclick="removeFromCart(${index})" class="absolute top-2 right-2 text-pink-400 font-bold">&times;</button>
-                <h4 class="font-bold text-pink-800 text-[10px] uppercase">${item.sn}. ${item.name} ${item.qty > 1 ? '(x' + item.qty + ')' : ''}</h4><p class="text-pink-600 font-bold text-xs">₹${item.price * item.qty}</p><p class="text-[8px] text-gray-400 font-bold uppercase tracking-widest mt-1">${item.category}</p><p class="text-[8px] text-gray-500 italic line-clamp-1">Note: ${item.note}</p></div>`).join('');
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            document.getElementById('cart-total').innerText = `₹${total}`; document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
-        }
+        function changeQuantity(idx, d) { cart[idx].qty += d; if (cart[idx].qty < 1) cart.splice(idx, 1); updateCartUI(); }
+        function removeFromCart(idx) { cart.splice(idx, 1); updateCartUI(); }
 
-        function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
+        function updateCartUI() {
+            localStorage.setItem('crochetCart', JSON.stringify(cart));
+            document.getElementById('cart-items').innerHTML = cart.map((it, i) => `<div class="bg-pink-50 p-4 rounded-xl relative border border-pink-100 shadow-sm"><button onclick="removeFromCart(${i})" class="absolute top-2 right-2 text-pink-400 font-bold">&times;</button><h4 class="font-bold text-pink-800 text-[10px] uppercase">${it.sn}. ${it.name}</h4><p class="text-pink-600 font-bold text-xs">₹${it.price * it.qty}</p>
+                <div class="qty-bar">
+                    <button onclick="changeQuantity(${i}, -1)" class="qty-btn"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M20 12H4" /></svg></button>
+                    <span class="qty-val">${it.qty}</span>
+                    <button onclick="changeQuantity(${i}, 1)" class="qty-btn"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg></button>
+                </div>
+                <p class="text-[8px] text-gray-400 font-bold uppercase mt-1 tracking-widest">${it.category}</p><p class="text-[8px] text-gray-500 italic line-clamp-1">Note: ${it.note}</p></div>`).join('');
+            const itemsTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            const shippingFee = (itemsTotal < 500 && itemsTotal > 0) ? 50 : 0;
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('items-total').innerText = `₹${itemsTotal}`;
+            document.getElementById('shipping-total').innerText = (shippingFee === 0 && itemsTotal > 0) ? "FREE" : `₹${shippingFee}`;
+            document.getElementById('cart-total').innerText = `₹${itemsTotal + shippingFee}`; 
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('cart-count-top').innerText = count;
+        }
 
         function checkout() {
             if (cart.length === 0) return alert("Cart is empty!");
-            const categories = [...new Set(cart.map(item => item.category))];
-            let message = "Hello! Collective order from Crafted with Love:\n\n";
-            categories.forEach(cat => { message += `--- ${cat.toUpperCase()} ---\n`; const items = cart.filter(i => i.category === cat); items.forEach((item) => { message += `${item.sn}. *${item.name}* ${item.qty > 1 ? '(x'+item.qty+')' : ''}\n   Price: Rs. ${item.price * item.qty}\n   Note: ${item.note}\n\n`; }); });
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            message += `Grand Total: Rs. ${total}\n\n*Please let me know if these are available.*`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        function orderNow(name, price, id, category, sn) {
-            let fp = Number(price); let s = "";
-            if (category === 'Phone Case') { const sel = document.getElementById(`type-${id}`); if (sel?.value === 'premium') { fp += 50; s = " (Premium)"; } }
-            else if (category === 'Hair Accessory') { const sel = document.getElementById(`size-${id}`); if (sel?.value === 'premium') { fp += 20; s = " (Big)"; } }
-            const note = document.getElementById(`note-${id}`).value || "Standard";
-            const message = `Hello! Order from Crafted with Love:\n\nProduct: ${sn}. ${name}${s}\nPrice: Rs. ${fp}\nNote: ${note}\n\n*Please let me know if this is available.*`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        function updateCasePrice(productId, base) { const select = document.getElementById(`type-${productId}`); document.getElementById(`price-${productId}`).innerText = `₹${select.value === 'premium' ? Number(base) + 50 : base}`; }
-        function updateAccessoryPrice(productId, base) { const select = document.getElementById(`size-${productId}`); document.getElementById(`price-${productId}`).innerText = `₹${select.value === 'premium' ? Number(base) + 20 : base}`; }
-        function injectFooter(sectionId) { const fc = document.getElementById('footer-' + sectionId); fc.innerHTML = `<div class="mt-auto pt-24 pb-12 text-center px-4"><p class="serif-heading text-xl md:text-4xl text-pink-800 leading-tight">Thank you for supporting us.<br>💞 Every order truly means the world to me 🧶</p><p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Crafted with Love</p></div>`; }
-        function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imageModal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-        function closeModal() { document.getElementById('imageModal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
-
-        // Section Highlight Logic
-        const observerOptions = { root: document.querySelector('.snap-container'), threshold: 0.6 };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-                    document.getElementById('nav-' + entry.target.id).classList.add('active');
-                }
+            const addr = document.getElementById('cart-address').value.trim();
+            const pin = document.getElementById('cart-pincode').value.trim();
+            if (!addr || !pin) return alert("Please enter both Address and Pincode!");
+            const itemsTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            const shippingFee = (itemsTotal < 500 && itemsTotal > 0) ? 50 : 0;
+            let msg = "Hello! Collective order from Crafted with Love:\n\n";
+            [...new Set(cart.map(i => i.category))].forEach(cat => { 
+                msg += `--- ${cat.toUpperCase()} ---\n`; 
+                cart.filter(i => i.category === cat).forEach(it => { msg += `${it.sn}. *${it.name}* (x${it.qty})\n   Price: Rs. ${it.price * it.qty}\n   Note: ${it.note}\n\n`; }); 
             });
-        }, observerOptions);
+            msg += `Items Total: Rs. ${itemsTotal}\n`;
+            msg += `Shipping: ${shippingFee === 0 ? "FREE" : "Rs. " + shippingFee}\n`;
+            msg += `*Grand Total: Rs. ${itemsTotal + shippingFee}*\n\n`;
+            msg += `*Delivery Address:* ${addr}\n`; 
+            msg += `*Pincode:* ${pin}\n\n`;
+            msg += `Please let me know if these are available.`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
 
-        document.querySelectorAll('.snap-section').forEach(section => observer.observe(section));
+        function orderNow(n, p, id, cat, sn) {
+            let fp = Number(p); let s = "";
+            if (cat === 'Phone Case' && document.getElementById(`type-${id}`)?.value === 'premium') { fp += 50; s = " (Premium)"; }
+            if (cat === 'Hair Accessory' && document.getElementById(`size-${id}`)?.value === 'premium') { fp += 20; s = " (Big)"; }
+            const note = document.getElementById(`note-${id}`).value || "Standard";
+            const shipping = fp < 500 ? 50 : 0;
+            const msg = `Hello! Order from Crafted with Love:\n\nProduct: ${sn}. ${n}${s}\nPrice: Rs. ${fp}\nShipping: ${shipping === 0 ? "FREE" : "Rs. " + shipping}\n*Total: Rs. ${fp + shipping}*\nNote: ${note}\n\nPlease let me know if this is available.`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
 
-        generateProducts('covers-grid', 35, 'Phone Case', 'covers', 'phonecover', 300, 'eg. model etc.');
-        generateProducts('keychains-grid', 31, 'Keychain', 'keychains', 'keychain', 150, 'eg. design etc.');
-        generateProducts('hair-accessories-grid', 32, 'Hair Accessory', 'hair acessories', 'hairclip', 100, 'eg. color etc.');
-        generateProducts('poshak-grid', 2, 'Poshak', 'poshaks', 'poshak', 500, 'eg. color etc.');
+        function updateCasePrice(id, b) { document.getElementById(`price-${id}`).innerText = `₹${document.getElementById(`type-${id}`).value === 'premium' ? Number(b) + 50 : b}`; }
+        function updateAccessoryPrice(id, b) { document.getElementById(`price-${id}`).innerText = `₹${document.getElementById(`size-${id}`).value === 'premium' ? Number(b) + 20 : b}`; }
+        function injectFooter(sid) { document.getElementById('footer-' + sid).innerHTML = `<div class="mt-auto pt-24 pb-12 text-center px-4"><p class="serif-heading text-xl md:text-4xl text-pink-800 leading-tight italic">Thank you for supporting us.<br>💞 Every order truly means the world to me 🧶</p><p class="mt-10 text-[9px] opacity-40 uppercase tracking-[0.3em] font-bold text-pink-700">Crafted with Love</p></div>`; }
+        function showToast() { const t = document.getElementById("toast"); t.className = "show"; setTimeout(()=>t.className = "", 3000); }
+        const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('nav-' + e.target.id).classList.add('active'); } }); }, { root: document.querySelector('.snap-container'), threshold: 0.6 });
+        document.querySelectorAll('.snap-section').forEach(s => obs.observe(s));
+        generateProducts('covers-grid', 35, 'Phone Case', 'covers', 'phonecover', 'eg. model etc.');
+        generateProducts('keychains-grid', 31, 'Keychain', 'keychains', 'keychain', 'eg. design etc.');
+        generateProducts('hair-accessories-grid', 32, 'Hair Accessory', 'hair acessories', 'hairclip', 'eg. color etc.');
+        generateProducts('poshak-grid', 2, 'Poshak', 'poshaks', 'poshak', 'eg. color etc.');
         updateCartUI();
     </script>
 </body>
